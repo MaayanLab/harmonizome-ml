@@ -1,0 +1,353 @@
+@import "variable.less";
+
+.landing-page,
+.not-found-page,
+.no-search-results-page {
+    .twitter-typeahead {
+        width: 100%;
+    }
+}
+
+/* Landing page
+ * ------------------------------------------------------------------------- */
+.landing-page {
+    margin-top: 100px;
+    h1 {
+        border: none;
+        color: #555;
+        font-size: 40px;
+    }
+    .instruction {
+        bottom: 2px;
+        color: @color-charcoal;
+        font-style: normal;
+        margin-right: 14px;
+        position: relative;
+    }
+}
+
+/* Search results page
+ * ------------------------------------------------------------------------- */
+.search-results-page {
+    form {
+        -moz-box-sizing: border-box;
+    }
+    h3 {
+        /* font-family: @font-family-base; */
+        font-weight: normal;
+        font-size: 18px;
+        border-bottom: none;
+        margin: 0;
+    }
+    table {
+        margin-top: 20px !important;
+        td {
+            padding-bottom: 15px !important;
+        }
+        thead {
+            display: none;
+        }
+    }
+    .filters {
+        li {
+            padding-left: 0;
+        }
+    }
+    .metadata {
+        padding-top: 20px;
+        background-color: @color-gray-light-very;
+        border-bottom: 1px solid @color-gray-light;
+        margin-bottom: 20px;
+    }
+    .description {
+        color: @color-gray;
+        p {
+            margin: 0;
+        }
+    }
+    .filters-text {
+        margin-right: 15px;
+    }
+    .note {
+        font-size: 12px;
+    }
+    .badge {
+        &.all,
+        &.dataset,
+        &.gene,
+        &.gene-set {
+            color: white;
+            a {
+                color: white;
+            }
+        }
+        &.all {
+            background-color: @color-gray;
+        }
+        &.dataset {
+            background-color: @color-entity-blue;
+        }
+        &.gene {
+            background-color: @color-entity-yellow;
+        }
+        &.gene-set {
+            background-color: @color-entity-red;
+        }
+    }
+}
+
+/* Suggest page
+ * ------------------------------------------------------------------------- */
+.suggest-page {
+    ul {
+        li {
+            margin-bottom: 2px;
+            padding: 0;
+        }
+    }
+}
+
+.dataset-page table.gene-sets td,
+.gene-set-page table.genes td {
+    padding: 3px;
+}
+
+/* Dataset page
+ * ------------------------------------------------------------------------- */
+.dataset-page {
+    .glyphicon-th {
+        font-size: 5em;
+    }
+}
+
+/* About page
+ * ------------------------------------------------------------------------- */
+.about-page {
+    .stats {
+        ul {
+            font-family: @font-family-primary;
+            font-size: 25px;
+        }
+    }
+}
+
+/* Contact page
+ * ------------------------------------------------------------------------- */
+.contact-page {
+    label {
+        display: block;
+        font-weight: normal;
+    }
+    textarea {
+        height: 150px;
+    }
+    label {
+        span {
+            color: @color-highlight-red;
+        }
+    }
+}
+
+/* Mobile page
+ * ------------------------------------------------------------------------- */
+.mobile-page {
+    border-bottom: 1px solid @color-gray-light;
+    ul.icons {
+        /* Approximately even with the top of the mobile device. */
+        margin-top: 64px;
+    }
+    i {
+        color: @color-primary-smoky;
+    }
+    img {
+        height: 600px;
+    }
+    h5 {
+    	margin-top: 40px;
+    	a {
+    		font-size: 24px;
+    		font-weight: 300;
+    	}
+    }
+    .app-store-links {
+        i {
+            position: relative;
+            top: -2px;
+        }
+        a {
+            font-family: @font-family-primary;
+            font-size: 30px;
+            font-weight: @font-weight-primary;
+            padding-left: 10px;
+            &:hover,
+            &:active,
+            &:focus {
+                text-decoration: none;
+                opacity: .7;
+            }
+        }
+        li.last {
+        margin-top: 20px;
+        	a {
+        		color: @color-entity-red;
+        	}
+        }
+    }
+}
+
+/* Pages with heat maps
+ * ------------------------------------------------------------------------- */
+@image-width: 930px;
+@image-height: 733px;
+
+.dataset-page,
+.heat-map-page {
+    .heat-map {
+        margin-top: 10px;
+        display: none;
+        img {
+            display: block;
+         	max-width: @image-width;
+            max-height: @image-height;
+        }
+        iframe {
+            height: 800px;
+            width: 100%;
+            border: none;
+        }
+        .heat-map-header {
+            border-top: 1px solid @color-gray-light;
+            padding-top: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            p {
+                margin: 0;
+            }
+            em {
+                margin-bottom: 15px;
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.dataset-page {
+    .heat-maps {
+        img.preview {
+            &:hover {
+                cursor: pointer;
+                opacity: .75;
+            }
+            width: 200px;
+        }
+    }
+}
+
+.heat-map-page {
+	&.heat-map-with-input-genes-page,
+	&.dataset-pair-heat-maps-page {
+	    .section {
+	        margin-bottom: 10px;
+	    }
+	    .heat-map,
+	    .button-wrapper {
+	        padding-top: 10px;
+	        border-top: 1px solid @color-gray-light;
+	    }
+	}
+	&.heat-map-with-input-genes-page {
+		textarea {
+			height: 200px;
+			margin-bottom: 10px;
+		}
+		select {
+			width: 100%;
+		}
+		#heat-map-wrapper {
+			display: none;
+			.heat-map-link {
+				background-color: @color-gray-light;
+				margin: 20px 0;
+				padding: 10px;
+				font-family: @font-family-primary;
+				font-size: 12px;
+				display: none;
+			}
+		}
+		.section {
+			margin-bottom: 10px;
+		}
+	}
+	&.dataset-heatmaps-page,
+	&.dataset-pair-heat-maps-page {
+	    label {
+	        margin-right: 10px;
+	    }
+	}
+}
+
+
+/* Gene page
+ * ------------------------------------------------------------------------- */
+.gene-page {
+    .list {
+        p {
+            margin: 10px 0 5px 0;
+        }
+        .association {
+		    margin-right: 6px;
+		    margin-bottom: 6px;
+		    border: 1px solid #ccc;
+	        background-color: #f9f9f9;
+		    display: inline-block;
+		    padding-left: 6px;
+		    padding-right: 6px;
+	    }
+    }
+}
+
+/* Gene set page
+ * ------------------------------------------------------------------------- */
+.gene-set-page {
+    .downloads-tools {
+        .enrichr {
+            img {
+                height: 28px;
+            }
+            padding: 2px;
+            position: relative;
+            top: 1px;
+        }
+    }
+    .gene-set-list {
+        &.attribute-list {
+            display: none;
+        }
+        .last {
+            border-top: 1px solid @color-gray-medium;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+    }
+}
+
+/* Documentation page
+ * ------------------------------------------------------------------------- */
+.documentation-page {
+    h2 {
+        border-bottom: 1px solid @color-gray-light;
+        font-size: 25px;
+    }
+    pre {
+        padding: 0;
+        border-radius: 0;
+        border: none;
+    }
+    .mono {
+        background-color: #f8f8f8;
+        color: #d14;
+        font-family: @font-family-mono;
+        font-size: 12px;
+        padding: 2px;
+    }
+}

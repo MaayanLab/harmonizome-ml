@@ -1,0 +1,12 @@
+__pycache__
+.DS_Store
+.ipynb_checkpoints
+.project
+.settings
+*.pyc
+app/static/
+app/template/*
+!app/template/*/
+node_modules
+package-lock.json
+target

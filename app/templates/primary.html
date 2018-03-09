@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="application-name" content="Harmonizome">
+
+<link rel="shortcut icon" href="image/logo_16x16.png?v=3">
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,700,700italic" rel="stylesheet"
+    type="text/css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<!-- <link href="http://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css"> -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="styles/common.css" rel="stylesheet" type="text/css">
+<link href="styles/pages.css" rel="stylesheet" type="text/css">
+<link href="styles/overrides.css" rel="stylesheet" type="text/css">
+<link href="styles/forms.css" rel="stylesheet" type="text/css">
+<link href="styles/custom-ml.css" rel="stylesheet" type="text/css">
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
+<!-- 
+<script>
+    (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-6277639-23', 'auto');
+    ga('send', 'pageview');
+</script> -->
+        <title>Harmonizome</title>
+        <meta name="description" content="Search for genes and functional terms extracted and organized from over a hundred publicly available resources." />
+        <meta name="keywords" content="harmonizome, lincs, bd2k, dcic, bd2k-lincs dcic, data coordination and integration center,
+                    biomedical, systems biology, drug discovery, gene signature,
+                    genomics, transcriptomics, proteomics, metabolomics,
+                    genes, proteins, cell lines, tissues, perturbations, diseases, phenotypes, drugs,
+                    maayan lab, avi ma'ayan, avi maayan" />
+    </head>
+    <body>
+        
+            <div id="navbar-wrapper" class="navbar-static-top">
+    <div class="container">
+        <h1 class="pull-left">
+            <a href="">
+                <img src="image/logo_30x26.png">
+                <span class="project-title">Harmonizome</span>
+                <span class="credits">Integrated Knowledge About Genes & Proteins</span>
+            </a>
+        </h1>
+
+        <!-- This is the dropdown button for the mobile version of the site -->
+        <div id="menu-dropdown" class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div id="menu" class="navbar-collapse collapse pull-right">
+	<ul class="nav navbar-nav list-inline">
+		<li class="search-item">
+			<a href="">Search</a>
+		</li>
+		<li>
+			<a href="download">Download</a>
+		</li>
+		<li>
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualize</a>
+			<ul class="dropdown-menu">
+				<li><a href="visualize/heat_map/global">Global Heat Map</a></li>
+				<li><a href="visualize/heat_map/dataset">Dataset Heat Maps</a></li>
+				<li><a href="visualize/heat_map/gene_similarity">Gene Similarity Heat Maps</a></li>
+                <li><a href="visualize/heat_map/attribute_similarity">Attribute Similarity Heat Maps</a></li>
+                <li><a href="visualize/heat_map/dataset_pairs">Dataset Pair Heat Maps</a></li>
+                <li><a href="visualize/heat_map/input_genes">Heat Map with Input Genes</a></li>
+			</ul>
+		</li>
+		<li>
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">Predict</a>
+			<ul class="dropdown-menu">
+				<li><a href="machine_learning">Intro</a></li>
+				<li><a href="machine_learning/ic_predictions">Ion channels</a></li>
+				<li><a href="machine_learning/mp_predictions">Mouse phenotypes</a></li>
+				<li><a href="machine_learning/gl_predictions">GPCR-Ligands</a></li>
+				<li><a href="machine_learning/ks_predictions">Kinase-substrates</a></li>
+			</ul>
+		</li>
+		<li>
+			<a href="documentation">API</a>
+		</li>
+		<li>
+			<a href="mobile">Mobile</a>
+		</li>
+		<li>
+			<a href="about">About</a>
+		</li>
+	</ul>
+</div>
+    </div>
+</div>
+        
+        <div class="wrapper">
+            <div class="container">
+                
+<div class="custom-predictions-page">
+	<h1>
+		Imputing Knowledge about Gene and Protein Function with Machine Learning <span class="note"><c:out
+				value="${note}" /></span>
+	</h1>
+	<p>
+		This form allows you to build and evaluate an arbitrary machine
+		learning pipeline on Harmonizome data. For more information about
+		the selections, follow the help tooltips.
+	</p>
+	
+<div class="form-page">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="custom-predictions-form" ipynb="#ipynb">
+                <ul class="progressbar">
+                    <li class="active">Targets</li>
+                    <li>Algorithm</li>
+                    <li>Evaluation</li>
+                </ul>
+                <fieldset>
+                    <h2 class="fs-title">Targets</h2>
+                    <h3 class="fs-subtitle">Select the data to be used in the analysis including relevant datasets and classes of interest.</h2>
+                    <p>We will merge the selected datasets and use them as data to train the model.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="attribute_databases">
+            Attribute Selection
+        </label><br />
+        <select class="select2" multiple="multiple" name="attribute_databases">
+        
+            <option selected>CCLE Cell Line Gene Expression Profiles</option>
+        
+            <option selected>ENCODE Transcription Factor Targets</option>
+        
+            <option>Allen Brain Atlas Adult Human Brain Tissue Gene Expression Profiles</option>
+        
+            <option>CHEA Transcription Factor Targets</option>
+        
+            <option>BioGPS Cell Line Gene Expression Profiles</option>
+        
+            <option>GTEx Tissue Gene Expression Profiles</option>
+        
+        </select>
+    </div>
+</div>
+                    <p>A gene list will be constructed based on associations with the selected class using the relevant dataset that contains the class.</p>
+                    <div class="ipynb-field">
+    <div class="search-field" data="/Harmonizome-api-dev/?field=target_class&q=">
+        <div class="form-horizontal">
+            <label for="target_class">Class Selection</label>
+            <div class="input-bar">
+                <input data-provide="typeahead" type="text" class="form-control" name="target_class" placeholder="Class you want to predict" value="integumentary system cancer (DOID:0060122 from DISEASES Text-mining Gene-Disease Assocation Evidence Scores)">
+            </div>
+            
+                <span>Try these:&nbsp;</span>
+                
+                <span class="hint">cancer</span>
+                
+                <span class="hint">lung</span>
+                
+                <span class="hint">heart</span>
+                
+                <span class="hint">tumor</span>
+                
+            
+        </div>
+    </div>
+</div>
+                    <input type="button" name="next" class="next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Algorithm</h2>
+                    <h3 class="fs-subtitle">We will train a machine learning algorirhm to properly classify genes as members of the target gene list in a binary classification problem.</h2>
+                    <p>A dimensionality reduction algorithm should be selected to be applied to the data.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="dimensionality_reduction_algorithm">
+            Dimensionality Reduction Algorithm
+        </label>
+        <select class="select2" name="dimensionality_reduction_algorithm">
+        
+            <option>PCA</option>
+        
+            <option selected>TruncatedSVD</option>
+        
+        </select>
+    </div>
+</div>
+                    <p>A machine learning algorithm should be selected to fit to the data.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="algorithm">
+            Machine Learning Algorithm
+        </label>
+        <select class="select2" name="algorithm">
+        
+            <option selected>GradientBoostingClassifier</option>
+        
+            <option>RandomForestClassifier</option>
+        
+        </select>
+    </div>
+</div>
+                    <p>Hyper parameter searching is used to automatically select the best algorithm parameters (using the primary metric as the criteria for that).</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="hyper_param_search_type">
+            Hyper Parameter Search Type
+        </label>
+        <select class="select2" name="hyper_param_search_type">
+        
+            <option selected>RandomizedSearchCV</option>
+        
+            <option>GridSearchCV</option>
+        
+        </select>
+    </div>
+</div>
+                    <p>Cross validation is employed as a strategy to train the model on data it hasn't seen before, more folds will ensure that the model is generalizing well to the data.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="cross_validation_n_folds">
+            Number of Cross-Validated Folds
+        </label>
+        <div class="input-group spinner" min=2 max=10>
+            <input type="text" name="cross_validation_n_folds" class="form-control" value="3">
+            <div class="input-group-btn-vertical">
+                <button class="btn btn-default" type="button">
+                    <i class="fa fa-caret-up"></i>
+                </button>
+                <button class="btn btn-default" type="button">
+                    <i class="fa fa-caret-down"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+                    <p>The primary evaluation metric is used for deciding how we assess the performance of our model.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="primary_metric">
+            Primary Evaluation Metric
+        </label>
+        <select class="select2" name="primary_metric">
+        
+            <option selected>log_loss</option>
+        
+            <option>roc_auc</option>
+        
+        </select>
+    </div>
+</div>
+                    <p>Additional evaluation metrics can be specified, these metrics will also be reported for all models trained.</p>
+                    <div class="ipynb-field">
+    <div class="form-group">
+        <label for="evaluation_metrics">
+            Evaluation Metrics
+        </label><br />
+        <select class="select2" multiple="multiple" name="evaluation_metrics">
+        
+            <option>explained_variance</option>
+        
+            <option>r2</option>
+        
+            <option>neg_median_absolute_error</option>
+        
+            <option>neg_mean_absolute_error</option>
+        
+            <option>neg_mean_squared_error</option>
+        
+            <option>neg_mean_squared_log_error</option>
+        
+            <option>median_absolute_error</option>
+        
+            <option>mean_absolute_error</option>
+        
+            <option>mean_squared_error</option>
+        
+            <option>accuracy</option>
+        
+            <option>roc_auc</option>
+        
+            <option>average_precision</option>
+        
+            <option>log_loss</option>
+        
+            <option>neg_log_loss</option>
+        
+            <option>adjusted_rand_score</option>
+        
+            <option>homogeneity_score</option>
+        
+            <option>completeness_score</option>
+        
+            <option>v_measure_score</option>
+        
+            <option>mutual_info_score</option>
+        
+            <option>adjusted_mutual_info_score</option>
+        
+            <option>normalized_mutual_info_score</option>
+        
+            <option>fowlkes_mallows_score</option>
+        
+            <option>precision</option>
+        
+            <option>precision_macro</option>
+        
+            <option>precision_micro</option>
+        
+            <option>precision_samples</option>
+        
+            <option>precision_weighted</option>
+        
+            <option>recall</option>
+        
+            <option>recall_macro</option>
+        
+            <option>recall_micro</option>
+        
+            <option>recall_samples</option>
+        
+            <option>recall_weighted</option>
+        
+            <option>f1</option>
+        
+            <option>f1_macro</option>
+        
+            <option>f1_micro</option>
+        
+            <option>f1_samples</option>
+        
+            <option>f1_weighted</option>
+        
+        </select>
+    </div>
+</div>
+                    <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                    <input type="button" name="next" class="submit next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Evaluation</h2>
+                    <h3 id="status" class="fs-subtitle">Loading...</span></h2>
+                    <div
+                        id="ipynb"
+                        status="#status"
+                        save="#saveButton"
+                        remote="/Harmonizome-api-dev/"
+                        filename="primary"
+                    >
+                    </div>
+                    <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                    <input id="saveButton" type="button" name="save" class="save action-button" disabled=true value="Save"/>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="scripts/custom-predictions-page.js"></script>
+<script>
+	app.setupForm('.custom-predictions-form')
+</script>
+
+            </div>
+        </div>
+        
+        <script src="scripts/common.js"></script>
+    </body>
+</html>

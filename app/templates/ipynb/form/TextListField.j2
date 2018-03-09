@@ -1,0 +1,12 @@
+<div class="ipynb-field">
+    <div class="form-group">
+        <label for="{{ name }}">
+            {{ label }}
+        </label>
+        <ul class="list-group" name="{{ name }}">
+        {% for choice in choices %}
+            <li class="list-group-item"><input type="checkbox"{% if default in choices %}checked{% endif %} /></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>

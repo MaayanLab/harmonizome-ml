@@ -1,0 +1,16 @@
+beautifulsoup4
+feather-format
+flask
+jupyter
+jupyter_client
+matplotlib
+nbconvert
+nbformat
+notebook
+pandas
+pymysql
+pyyaml
+scipy
+sklearn
+tables
+uwsgi

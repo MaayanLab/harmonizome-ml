@@ -1,0 +1,16 @@
+<div class="ipynb-field">
+    <div class="search-field" data="{{ PREFIX }}/?field={{ name }}&q=">
+        <div class="form-horizontal">
+            <label for="{{ name }}">{{ label }}</label>
+            <div class="input-bar">
+                <input data-provide="typeahead" type="text" class="form-control" name="{{ name }}" placeholder="{{ hint }}" value="{{ default }}">
+            </div>
+            {% if hints %}
+                <span>Try these:&nbsp;</span>
+                {% for h in hints %}
+                <span class="hint">{{ h }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

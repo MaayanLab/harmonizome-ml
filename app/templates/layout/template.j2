@@ -1,0 +1,28 @@
+<%@ page contentType="text/html" pageEncoding="utf-8"%>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="cfn" uri="http://amp.pharm.mssm.edu/functions"%>
+<%@ page import="edu.mssm.pharm.maayanlab.Harmonizome.util.Constant"%>
+
+<t:wrapper title="${title}">
+	<div class="custom-predictions-page">
+		<h1>
+			Imputing Knowledge about Gene and Protein Function with Machine Learning <span class="note"><c:out
+					value="${note}" /></span>
+		</h1>
+		<p>
+            This form allows you to build and evaluate an arbitrary machine
+            learning pipeline on Harmonizome data. For more information about
+            the selections, follow the help tooltips.
+        </p>
+        {% block body %}
+        {% endblock %}
+	</div>
+</t:wrapper>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="script/custom-predictions-page.js"></script>
+<script>
+	app.setupForm('.custom-predictions-form')
+</script>

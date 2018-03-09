@@ -1,0 +1,12 @@
+<div class="ipynb-field">
+    <div class="form-group">
+        <label for="{{ name }}">
+            {{ label }}
+        </label><br />
+        <select class="select2" multiple="multiple" name="{{ name }}">
+        {% for choice in choices %}
+            <option{% if choice in default %} selected{% endif %}>{{ choice }}</option>
+        {% endfor %}
+        </select>
+    </div>
+</div>

@@ -1,0 +1,215 @@
+.form-page {
+    /*form styles adopted from http://designify.me/web-design/bootstrap-multi-step-signup-form/#.WoyVUxPwZBw*/
+    .custom-predictions-form {
+        text-align: center;
+        position: relative;
+        margin-top: 30px;
+        fieldset {
+            text-align: left;
+            background: white;
+            border: 0 none;
+            border-radius: 0px;
+            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+            padding: 20px 30px;
+            box-sizing: border-box;
+            width: 100%;
+            /*stacking fieldsets above each other*/
+            position: relative;
+            &:not(:first-of-type) {
+                display: none;
+            }
+        }
+        input,
+        textarea {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 0px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: montserrat;
+            color: #2C3E50;
+            font-size: 13px;
+        }
+        input:focus,
+        textarea:focus {
+            -moz-box-shadow: none !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            border: 1px solid #343844;
+            outline-width: 0;
+            transition: All 0.5s ease-in;
+            -webkit-transition: All 0.5s ease-in;
+            -moz-transition: All 0.5s ease-in;
+            -o-transition: All 0.5s ease-in;
+        }
+        .action-button,
+        .action-button-previous {
+            //  &:extend(.btn .btn-primary all);
+            width: 100px;
+            background: #343844;
+            font-weight: bold;
+            color: white;
+            border: 0 none;
+            border-radius: 15px;
+            padding: 10px 5px;
+            margin: 10px 5px;
+            &:disabled {
+                background: #C5C5F1;
+            }
+            &:not(:disabled) {
+                &:hover,
+                &:focus {
+                    box-shadow: 0 0 0 2px white, 0 0 0 3px #343844;
+                }
+            }
+        }
+        /*headings*/
+        .fs-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            color: #2C3E50;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .fs-subtitle {
+            font-weight: normal;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        /*progressbar*/
+        .progressbar {
+            margin-bottom: 30px;
+            overflow: hidden;
+            /*CSS counters to number the steps*/
+            counter-reset: step;
+            li {
+                list-style-type: none;
+                color: black;
+                text-transform: uppercase;
+                font-size: 9px;
+                width: 33%;
+                float: left;
+                position: relative;
+                letter-spacing: 1px;
+            }
+            li:before {
+                content: counter(step);
+                counter-increment: step;
+                width: 24px;
+                height: 24px;
+                line-height: 26px;
+                display: block;
+                font-size: 12px;
+                color: #333;
+                background: white;
+                border-radius: 25px;
+                margin: 0 auto 10px auto;
+            }
+            /*progressbar connectors*/
+            li:after {
+                content: '';
+                width: 100%;
+                height: 2px;
+                background: white;
+                position: absolute;
+                left: -50%;
+                top: 9px;
+                z-index: -1;
+                /*put it behind the numbers*/
+            }
+            li:first-child:after {
+                /*connector not needed before the first step*/
+                content: none;
+            }
+            /*marking active/completed steps green*/
+            /*The number of the step and the connector before it = green*/
+            li.active:before,
+            li.active:after {
+                background: #343844;
+                color: white;
+            }
+        }
+        /* Not relevant to this form */
+        .dme_link {
+            margin-top: 30px;
+            text-align: center;
+            a {
+                background: #FFF;
+                font-weight: bold;
+                color: #343844;
+                border: 0 none;
+                border-radius: 25px;
+                cursor: pointer;
+                padding: 5px 25px;
+                font-size: 12px;
+            }
+            a:hover,
+            a:focus {
+                background: #C5C5F1;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.custom-predictions-page {
+    .ipynb-field {
+        display: block;
+        .twitter-typeahead {
+            float: unset;
+        }
+        .tt-menu {
+            overflow-y: auto
+        }
+        .spinner {
+            width: 100px;
+            input {
+                text-align: right;
+            }
+        }
+        .select2-container {
+            min-width:140px;
+        }
+        .hint {
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 5px;
+            background-color: #e4e4e4;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .input-group-btn-vertical {
+            position: relative;
+            white-space: nowrap;
+            width: 1%;
+            vertical-align: top;
+            display: table-cell;
+            >.btn {
+                display: block;
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 8px;
+                margin-left: -1px;
+                position: relative;
+                border-radius: 0;
+            }
+            >.btn:first-child {
+                border-top-right-radius: 4px;
+            }
+            >.btn:last-child {
+                margin-top: -2px;
+                border-bottom-right-radius: 4px;
+            }
+            i {
+                position: absolute;
+                top: 0;
+                left: 4px;
+            }
+        }
+    }
+}

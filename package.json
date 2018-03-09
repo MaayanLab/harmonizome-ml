@@ -1,0 +1,25 @@
+{
+  "name": "nbgen-final",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "scripts": {
+    "start": "grunt start",
+    "build": "grunt build"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.1.0",
+    "grunt": "^1.0.2",
+    "grunt-browserify": "^5.2.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-shell-spawn": "^0.3.10",
+    "grunt-wait-server": "^0.3.0"
+  }
+}

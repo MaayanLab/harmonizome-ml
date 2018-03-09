@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include "fragment/globalIncludes.j2" %}
+        <title>{% if title %}{{ title }}{% else %}Harmonizome{% endif %}</title>
+        <meta name="description" content="{% if description %}{{ description }}{% else %}Search for genes and functional terms extracted and organized from over a hundred publicly available resources.{% endif %}" />
+        <meta name="keywords" content="harmonizome, lincs, bd2k, dcic, bd2k-lincs dcic, data coordination and integration center,
+                    biomedical, systems biology, drug discovery, gene signature,
+                    genomics, transcriptomics, proteomics, metabolomics,
+                    genes, proteins, cell lines, tissues, perturbations, diseases, phenotypes, drugs,
+                    maayan lab, avi ma'ayan, avi maayan{% if extraKeywords %}, {{ extraKeywords }}{% endif %}" />
+    </head>
+    <body>
+        {% if navType != "withSearch" %}
+            {% include "fragment/navbar.j2" %}
+        {% else %}
+            {% include "fragment/navbarWithSearch.j2" %}
+        {% endif %}
+        <div class="wrapper">
+            <div class="container{% if pageWidth %}-{{ pageWidth }}{% endif %}">
+                {% block primary_body %}
+                {% endblock %}
+            </div>
+        </div>
+        {% include "fragment/footer.j2" %}
+        <script src="scripts/common.js"></script>
+    </body>
+</html>

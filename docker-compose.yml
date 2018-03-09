@@ -1,0 +1,12 @@
+version: '3'
+services:
+  custom-ml:
+    build: .
+    volumes:
+      - ./gruntfile.js:/app/gruntfile.js
+      - ./app/:/app/app/
+      - ./scripts/:/app/scripts/
+      - ./static/:/app/static/
+      - ./styles/:/app/styles/
+    # Production:
+    command: "npx grunt start:flaskApp"

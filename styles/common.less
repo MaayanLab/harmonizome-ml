@@ -1,0 +1,494 @@
+/*
+ * Common styling across every page.
+ */
+@import "variable.less";
+
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: @dimension-footer-height;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: @dimension-footer-height;
+    width: 100%;
+}
+
+.wrapper {
+    padding-bottom: 20px;
+}
+
+/* Tag selectors.
+ * ------------------------------------------------------------------------- */
+html {
+    font-family: @font-family-base;
+}
+
+a,
+a:link {
+    color: @color-link-blue;
+    text-decoration: none;
+}
+
+a:hover {
+    color: @color-link-blue;
+    text-decoration: underline;
+}
+
+a:visited,
+a:active {
+    text-decoration: none;
+}
+
+a.btn {
+    color: black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: @font-family-primary;
+}
+
+h1, h2, h3 {
+    border-bottom: 1px solid @color-gray-medium;
+    font-weight: @font-weight-primary;
+}
+
+h4, h5, h6 {
+    font-weight: @font-weight-bold;
+}
+
+input {
+    width: 100%;
+}
+
+ul {
+    list-style-type: square;
+    padding-left: 15px;
+}
+
+table {
+    ul,
+    ol {
+        margin-bottom: 0;
+    }
+}
+
+strong {
+    font-weight: bold;
+}
+
+select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-position: right 50% !important;
+    background-repeat: no-repeat !important;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=) !important;
+    padding: .5em !important;
+    padding-right: 1.5em !important;
+    border-radius: 0 !important;
+    line-height: inherit !important;
+}
+
+/* Generic classes
+ * ------------------------------------------------------------------------- */
+.clear {
+    clear: both;
+}
+
+.note {
+    font-size: 14px;
+    font-style: italic;
+    font-weight: @font-weight-bold;
+    &.dataset {
+        color: @color-entity-blue;
+    }
+    &.gene {
+        color: @color-entity-yellow;
+    }
+    &.gene-set {
+        color: @color-entity-red;
+    }
+}
+
+.glyphicon-search {
+    cursor: pointer;
+}
+
+.instruction {
+    font-style: italic;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.top-buffer {
+    margin-top: 20px;
+}
+
+.bottom-buffer {
+    margin-bottom: 20px;
+}
+
+.initial {
+    &:first-letter {
+        text-transform: uppercase;
+    }
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.underline {
+    text-decoration: underline !important;
+}
+
+/* Show once DataTables is ready. */
+.data-table {
+    display: none;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+/* Section selectors.
+ * ------------------------------------------------------------------------- */
+#navbar-wrapper {
+    background-color: @color-navbar-background;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    height: @dimension-nav-height;
+    padding: 10px;
+    /* Important! Otherwise the dropdown menu doesn't work!
+     * See: http://stackoverflow.com/a/16156332/1830334
+     */
+    position: relative;
+    h1 {
+        border: none;
+        font-size: 25px;
+        margin-bottom: 4px;
+        margin-top: 0;
+        span.credits {
+            font-family: @font-family-primary;
+            font-weight: @font-weight-primary;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+    .nav > li > a:focus,
+    .nav > li > a:hover,
+    .nav .open > a,
+    .nav .open > a:active,
+    .nav .open > a:focus,
+    .nav .open > a:hover {
+        background-color: @color-navbar-background;
+    }
+    .dropdown-menu {
+        background-color: @color-navbar-background;
+        border-radius: 0;
+        border: none;
+        top: 30px;
+    }
+    #menu {
+        background-color: @color-navbar-background;
+        margin-bottom: 20px;
+        position: relative;
+        /* Line up with title text */
+        top: 7px;
+        text-transform: uppercase;
+    }
+    .nav {
+        li {
+            padding: 0;
+            margin-left: 5px;
+            margin-right: 5px;
+            &:hover,
+            &:focus,
+            &:active {
+                background-color: @color-navbar-background;
+            }
+        }
+        a:hover,
+        a:focus {
+            color: white;
+            opacity: .7;
+            transition: box-shadow .4s cubic-bezier(.25, .8, .25, 1), background-color .4s cubic-bezier(.25, .8, .25, 1), -webkit-transform .4s cubic-bezier(.25, .8, .25, 1);
+            transition: box-shadow .4s cubic-bezier(.25, .8, .25, 1), background-color .4s cubic-bezier(.25, .8, .25, 1), transform .4s cubic-bezier(.25, .8, .25, 1);
+        }
+    }
+    img {
+        bottom: 2px;
+        position: relative;
+        margin-right: 14px;
+    }
+    a {
+        color: white;
+        font-family: @font-family-primary;
+        font-weight: @font-weight-primary;
+        &:hover,
+        &:active {
+            //color: @color-gray-light;
+            background-color: @color-navbar-background;
+        }
+    }
+    .navbar-nav.list-inline {
+        a {
+            padding: 0 1px;
+        }
+    }
+    .navbar-toggle {
+        padding: 0;
+        span {
+            background-color: white;
+        }
+    }
+    .search {
+        bottom: 6px;
+        float: left;
+        left: 20px;
+        position: relative;
+        width: 25%;
+        top: -2px;
+    }
+}
+
+@media (max-width: 1200px) {
+    #navbar-wrapper {
+        h1 {
+            .credits {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: 1000px) {
+    #navbar-wrapper {
+        h1 {
+            .project-title {
+                display: none;
+            }
+        }
+        ul {
+        	li.search-item {
+        		display: none;
+        	}
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    #navbar-wrapper {
+        //h1 {
+        //    .project-title {
+        //        display: none;
+        //    }
+        //}
+        #menu {
+            width: 100%;
+            a {
+                padding: 2px 5px;
+                &:hover,
+                &focus {
+                    background-color: @color-navbar-background-light;
+                }
+            }
+            li {
+                padding: 5px 10px;
+            }
+        }
+        .search-bar {
+            .entity-dropdown {
+                display: none;
+            }
+        }
+        ul {
+            top: 0;
+        }
+    }
+}
+
+.search-bar {
+    &.on-index-page {
+        margin: 0 auto;
+        width: 600px;
+    }
+    &.in-navbar {
+        float: left;
+        margin: 0 0 0 10px;
+        position: relative;
+        bottom: 2px;
+    }
+    form {
+        width: 100%;
+        display: inline-block;
+    }
+    .input-bar {
+        overflow: hidden;
+        input {
+            /* Remove double border from Bootstrap form-controls. */
+            border-left: none;
+            border-right: none;
+            width: 100%;
+        }
+    }
+    .entity-dropdown {
+        float: left;
+        &.gene {
+            border: 1px solid @color-entity-yellow;
+            width: 80px;
+        }
+        &.geneSet {
+            border: 1px solid @color-entity-red;
+            width: 105px;
+        }
+        &.dataset {
+            border: 1px solid @color-entity-blue;
+            width: 95px;
+        }
+        &.all {
+            /* Don't use a variable for CCC. This is explicitly matching Bootstrap. */
+            border: 1px solid #ccc;
+            width: 55px;
+        }
+    }
+    .submit-button {
+        float: right;
+        background: lightblue;
+        width: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-bar {
+        &.on-index-page {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    .search-bar {
+        &.in-navbar {
+            .input-bar {
+                width: 120px;
+            }
+        }
+    }
+}
+
+.footer {
+    background: @color-gray-light;
+    color: @color-charcoal;
+    padding: 13px;
+    width: 100%;
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    a {
+        color: @color-charcoal;
+        font-family: @font-family-primary;
+        font-weight: @font-weight-primary;
+    }
+    p {
+        font-family: @font-family-primary;
+    }
+    h6 {
+    	border-bottom: none;
+    	font-weight: bold;
+    	font-size: 14px;
+    	margin-bottom: 5px;
+    }
+    .pull-left {
+    	width: 80%;
+        #citation {
+	    }
+        #contact {
+	        .left-border {
+	            border-left: 1px solid @color-gray-medium;
+	            padding-left: 8px;
+	        }
+	    }
+    }
+    #share {
+        a {
+            float: right;
+        }
+        img {
+            padding-left: 5px;
+            width: 30px;
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+}
+
+@media (max-width: 665px) {
+    .hide-on-mobile {
+        display: none;
+    }
+    .footer {
+    	.pull-left {
+    		width: 100%;
+    	}
+    } 
+}
+
+/* This break point is when the publication citation text-wraps, causing the 
+ * footer to need to be longer.
+ */
+@media (max-width: 990px) {
+    .footer {
+    	height: 240px;
+    } 
+}
+
+.project-title {
+    font-family: @font-family-accent;
+}
+
+/* Loading screen
+ * ------------------------------------------------------------------------- */
+.loader-container {
+	background-color: rgba(255, 255, 255, 0.75);
+	cursor: wait;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 9999;
+	.loader-modal {
+		background-color: #fffac7;
+		border: 1px solid #fff169;
+		color: @color-charcoal;
+		font-family: @font-family-base;
+		font-size: 13px;
+		font-weight: bold;
+		padding: 5px;
+		margin: 0 auto;
+		position: absolute;
+		left: 0;
+		text-align: center;
+		right: 0;
+		top: 40%;
+		width: 150px;
+	}
+}
