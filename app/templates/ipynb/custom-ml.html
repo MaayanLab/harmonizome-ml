@@ -1,0 +1,208 @@
+{% extends "layout/template.j2" %}
+{% block body %}
+<div class="form-page">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="custom-predictions-form" ipynb="#ipynb">
+                <ul class="progressbar">
+                    <li class="active">Targets</li>
+                    <li>Algorithm</li>
+                    <li>Evaluation</li>
+                </ul>
+                <fieldset>
+                    <h2 class="fs-title">Targets</h2>
+                    <h3 class="fs-subtitle">Select the data to be used in the analysis including relevant datasets and classes of interest.</h2>
+                    <p>We will merge the selected datasets and use them as data to train the model.</p>
+                    {{ MultiChoiceField(
+                        name='attribute_databases',
+                        label='Attribute Selection',
+                        hint='Databases to use for prediction',
+                        default=[
+                            'CCLE Cell Line Gene Expression Profiles',
+                            'ENCODE Transcription Factor Targets',
+                        ],
+                        choices=[
+                            'CCLE Cell Line Gene Expression Profiles',
+                            'ENCODE Transcription Factor Targets',
+                            'Allen Brain Atlas Adult Human Brain Tissue Gene Expression Profiles',
+                            'CHEA Transcription Factor Targets',
+                            'BioGPS Cell Line Gene Expression Profiles',
+                            'GTEx Tissue Gene Expression Profiles',
+                        ],
+                        group='Targets',
+                    ) }}
+                    <p>A gene list will be constructed based on associations with the selected class using the relevant dataset that contains the class.</p>
+                    {{ TargetClassSearchField(
+                        name='target_class',
+                        label='Class Selection',
+                        hint='Class you want to predict',
+                        default='integumentary system cancer (DOID:0060122 from DISEASES Text-mining Gene-Disease Assocation Evidence Scores)',
+                        hints=[
+                            'cancer',
+                            'lung',
+                            'heart',
+                            'tumor',
+                        ],
+                        group='Targets',
+                    ) }}
+                    <input type="button" name="next" class="next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Algorithm</h2>
+                    <h3 class="fs-subtitle">We will train a machine learning algorirhm to properly classify genes as members of the target gene list in a binary classification problem.</h2>
+                    <p>A dimensionality reduction algorithm should be selected to be applied to the data.</p>
+                    {{ ChoiceField(
+                        name='dimensionality_reduction_algorithm',
+                        label='Dimensionality Reduction Algorithm',
+                        default='TruncatedSVD',
+                        choices=[
+                            'PCA',
+                            'TruncatedSVD',
+                        ],
+                        group='Algorithm'
+                    ) }}
+                    <p>A machine learning algorithm should be selected to fit to the data.</p>
+                    {{ ChoiceField(
+                        name='algorithm',
+                        label='Machine Learning Algorithm',
+                        default='GradientBoostingClassifier',
+                        choices=[
+                            'GradientBoostingClassifier',
+                            'RandomForestClassifier',
+                        ],
+                        group='Algorithm'
+                    ) }}
+                    <p>Hyper parameter searching is used to automatically select the best algorithm parameters (using the primary metric as the criteria for that).</p>
+                    {{ ChoiceField(
+                        name='hyper_param_search_type',
+                        label='Hyper Parameter Search Type',
+                        default='RandomizedSearchCV',
+                        choices=[
+                            'RandomizedSearchCV',
+                            'GridSearchCV'
+                        ],
+                        group='Algorithm'
+                    ) }}
+                    <p>Cross validation is employed as a strategy to train the model on data it hasn't seen before, more folds will ensure that the model is generalizing well to the data.</p>
+                    {{ IntField(
+                        name='cross_validation_n_folds',
+                        label='Number of Cross-Validated Folds',
+                        default=3,
+                        min=2,
+                        max=10,
+                        group='Algorithm'
+                    ) }}
+                    <p>The primary evaluation metric is used for deciding how we assess the performance of our model.</p>
+                    {{ ChoiceField(
+                        name='primary_metric',
+                        label='Primary Evaluation Metric',
+                        default='log_loss',
+                        choices=[
+                            'explained_variance',
+                            'r2',
+                            'neg_median_absolute_error',
+                            'neg_mean_absolute_error',
+                            'neg_mean_squared_error',
+                            'neg_mean_squared_log_error',
+                            'median_absolute_error',
+                            'mean_absolute_error',
+                            'mean_squared_error',
+                            'accuracy',
+                            'roc_auc',
+                            'average_precision',
+                            'log_loss',
+                            'neg_log_loss',
+                            'adjusted_rand_score',
+                            'homogeneity_score',
+                            'completeness_score',
+                            'v_measure_score',
+                            'mutual_info_score',
+                            'adjusted_mutual_info_score',
+                            'normalized_mutual_info_score',
+                            'fowlkes_mallows_score',
+                            'precision',
+                            'precision_macro',
+                            'precision_micro',
+                            'precision_samples',
+                            'precision_weighted',
+                            'recall',
+                            'recall_macro',
+                            'recall_micro',
+                            'recall_samples',
+                            'recall_weighted',
+                            'f1',
+                            'f1_macro',
+                            'f1_micro',
+                            'f1_samples',
+                            'f1_weighted'
+                        ],
+                        group='Algorithm'
+                    ) }}
+                    <p>Additional evaluation metrics can be specified, these metrics will also be reported for all models trained.</p>
+                    {{ MultiChoiceField(
+                        name='evaluation_metrics',
+                        label='Evaluation Metrics',
+                        default=[],
+                        choices=[
+                            'explained_variance',
+                            'r2',
+                            'neg_median_absolute_error',
+                            'neg_mean_absolute_error',
+                            'neg_mean_squared_error',
+                            'neg_mean_squared_log_error',
+                            'median_absolute_error',
+                            'mean_absolute_error',
+                            'mean_squared_error',
+                            'accuracy',
+                            'roc_auc',
+                            'average_precision',
+                            'log_loss',
+                            'neg_log_loss',
+                            'adjusted_rand_score',
+                            'homogeneity_score',
+                            'completeness_score',
+                            'v_measure_score',
+                            'mutual_info_score',
+                            'adjusted_mutual_info_score',
+                            'normalized_mutual_info_score',
+                            'fowlkes_mallows_score',
+                            'precision',
+                            'precision_macro',
+                            'precision_micro',
+                            'precision_samples',
+                            'precision_weighted',
+                            'recall',
+                            'recall_macro',
+                            'recall_micro',
+                            'recall_samples',
+                            'recall_weighted',
+                            'f1',
+                            'f1_macro',
+                            'f1_micro',
+                            'f1_samples',
+                            'f1_weighted'
+                        ],
+                        group='Algorithm',
+                    ) }}
+                    <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                    <input type="button" name="next" class="submit next action-button" value="Next"/>
+                </fieldset>
+                <fieldset>
+                    <h2 class="fs-title">Evaluation</h2>
+                    <h3 id="status" class="fs-subtitle">Loading...</span></h2>
+                    <div
+                        id="ipynb"
+                        status="#status"
+                        save="#saveButton"
+                        remote="{{ PREFIX }}/"
+                        filename="primary"
+                    >
+                    </div>
+                    <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
+                    <input id="saveButton" type="button" name="save" class="save action-button" disabled=true value="Save"/>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
