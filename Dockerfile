@@ -2,13 +2,9 @@ FROM nikolaik/python-nodejs:latest
 
 WORKDIR /app
 
-ADD package.json /app/package.json
+ADD entrypoint.sh /entrypoint.sh
 RUN set -x \
-    && npm install
-
-ADD app/requirements.txt /app/requirements.txt
-RUN set -x \
-    && pip install -r requirements.txt
+    && chmod +x /entrypoint.sh
 
 VOLUME [ "/app" ]
 EXPOSE 5000
@@ -19,4 +15,5 @@ ENV MYSQL_DATABASE ""
 ENV MYSQL_USER ""
 ENV MYSQL_PASSWORD ""
 
+ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "npm", "run", "start" ]
