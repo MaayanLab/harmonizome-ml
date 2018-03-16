@@ -113,7 +113,7 @@ module.exports = function(grunt) {
 				}
 			},
 			pydeps: {
-				command: 'pip install -r requirements.txt',
+				command: 'pip3 install -r requirements.txt',
 				options: {
 					execOptions: {
 						async: false,
@@ -143,6 +143,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-shell-spawn')
 
+	grunt.registerTask('prepare', [
+		'shell:pydeps',
+	])
 	grunt.registerTask('build', [
 		'shell:ipynb',
 		'less',
