@@ -8,23 +8,23 @@
  * ------------------------------------------------------------------------- */
 html {
     position: relative;
-    min-height: 100%;
+    min-height: vh;
 }
 
 body {
-    margin-bottom: @dimension-footer-height;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
     height: @dimension-footer-height;
     width: 100%;
 }
 
 .wrapper {
     padding-bottom: 20px;
+    flex: 1 0 auto;
 }
 
 /* Tag selectors.

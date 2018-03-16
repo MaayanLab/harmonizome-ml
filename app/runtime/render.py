@@ -5,7 +5,7 @@ from model import build_safe_value
 from .convert import ipynb_import_from_file, ipynb_export_nb
 from util import globalContext
 
-filename_constraint = re.compile(r'^[A-Za-z]+$')
+filename_constraint = re.compile(r'^[A-Za-z-]+$')
 field_match = re.compile(r'\{\{(.+?)\}\}', re.MULTILINE | re.DOTALL)
 
 def render_ipynb(context):
