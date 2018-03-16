@@ -41,7 +41,7 @@ export function setupRemoteIpynb(ipynb, params) {
     let current_index
     let current_code_cell = 1
     let started = false
-    let scroll = true
+    let scroll = false
 
     setupRemote(
         remote,

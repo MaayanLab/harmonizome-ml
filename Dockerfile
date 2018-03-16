@@ -2,18 +2,22 @@ FROM nikolaik/python-nodejs:latest
 
 WORKDIR /app
 
-ADD entrypoint.sh /entrypoint.sh
+ADD package.json /app/package.json
 RUN set -x \
-    && chmod +x /entrypoint.sh
+    && npm install
 
-VOLUME [ "/app" ]
+ADD app/requirements.txt /app/requirements.txt
+RUN set -x \
+    && pip install -r requirements.txt
+
 EXPOSE 5000
 
-ENV HARMONIZOME_API_PREFIX ""
-ENV MYSQL_HOST ""
-ENV MYSQL_DATABASE ""
-ENV MYSQL_USER ""
-ENV MYSQL_PASSWORD ""
+ADD ./app/ /app/app
+ADD ./data/attribute_list.json /app/data/attribute_list.json
+ADD ./data/harmonizome.py /app/data/harmonizome.py
+ADD ./gruntfile.js /app/gruntfile.js
 
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "npm", "run", "start" ]
+ARG HARMONIZOME_API_PREFIX="/Harmonizome-api"
+ENV HARMONIZOME_API_PREFIX=${HARMONIZOME_API_PREFIX}
+
+CMD [ "npx", "grunt", "shell:flaskApp" ]
