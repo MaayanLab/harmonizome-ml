@@ -77,7 +77,7 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			flask: {
-				command: 'python3 ./main.py',
+				command: 'python ./main.py',
 				options: {
 					async: true,
 					execOptions: {
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 				},
 			},
 			flaskApp: {
-				command: 'python3 ./main.py',
+				command: 'python ./main.py',
 				options: {
 					async: false,
 					execOptions: {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
 				}
 			},
 			ipynb: {
-				command: 'python3 ./preprocess.py',
+				command: 'python ./preprocess.py',
 				options: {
 					execOptions: {
 						async: false,
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
 				}
 			},
 			pydeps: {
-				command: 'pip3 install -r requirements.txt',
+				command: 'pip install -r requirements.txt',
 				options: {
 					execOptions: {
 						async: false,

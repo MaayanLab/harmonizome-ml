@@ -1,9 +1,9 @@
 {
-  "name": "nbgen-final",
+  "name": "harmonizome-api",
   "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "license": "ISC",
+  "description": "The backend for custom machine learning analysis processing.",
+  "author": "Daniel J. B. Clarke",
+  "license": "",
   "dependencies": {},
   "scripts": {
     "start": "grunt start:flask",
