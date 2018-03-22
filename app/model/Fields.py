@@ -2,7 +2,7 @@ import os
 import re
 import json
 from copy import copy
-from flask import render_template
+from flask import render_template, Markup
 from util import globalContext
 
 fields = {}
@@ -12,7 +12,7 @@ def register(field):
 
 def build_form_fields():
     return {
-        name: lambda _field=field, **kwargs: _field(**kwargs).render()
+        name: lambda _field=field, **kwargs: _field(**kwargs)#.render()
         for name, field in fields.items()
     }
 
@@ -33,16 +33,16 @@ class Field:
     
     def get_field(self):
         return self.__class__.__name__
-    
+
     def get_template(self):
         return os.path.join('ipynb', 'form', self.get_field() + '.j2')
 
     def render(self):
-        return render_template(
+        return Markup(render_template(
             self.get_template(),
             **self.args,
             **globalContext,
-        )
+        ))
     
     def constraint(self, value):
         return False
@@ -52,7 +52,7 @@ class Field:
 
     def safe_value(self, value):
         if self.constraint(value):
-            return self.value(value)
+            return Markup(self.value(value))
         raise Exception('%s constraint not satisfied' % (self.args['label']))
 
 @register
@@ -77,8 +77,17 @@ class ChoiceField(Field):
             **kwargs,
         )
 
+    def value(self, value):
+        if type(self.args['choices']) == dict:
+            return self.args['choices'][value]
+        else:
+            return value
+    
     def constraint(self, value):
-        return value in self.args['choices']
+        if type(self.args['choices']) == dict:
+            return value in self.args['choices'].keys()
+        elif type(self.args['choices']) == list:
+            return value in self.args['choices']
 
 @register
 class MultiChoiceField(ChoiceField):
@@ -121,7 +130,7 @@ class TextField(StringField):
 @register
 class TextListField(TextField):
     def value(self, value):
-        return value.split('\n')
+        return Markup(value.split('\n'))
 
 @register
 class SearchField(StringField):
@@ -143,6 +152,28 @@ class TargetClassSearchField(SearchField):
         return 'SearchField'
 
 @register
+class SectionField(Field):
+    def __init__(self, content='', **kwargs):
+        super().__init__(
+            content=content,
+            **kwargs,
+        )
+
+    def is_section(self):
+        return True
+
+    def render(self):
+        return self.args['content']
+
+    def safe_value(self, value):
+        return Markup(self.args['content'])
+
+@register
+class LaunchField(SectionField):
+    def get_field(self):
+        return 'SectionField'
+
+@register
 class DescriptionField(Field):
     def __init__(self, content='', **kwargs):
         super().__init__(
@@ -154,5 +185,5 @@ class DescriptionField(Field):
         return self.args['content']
 
     def safe_value(self, value):
-        return self.args['content']
+        return Markup(self.args['content'])
 

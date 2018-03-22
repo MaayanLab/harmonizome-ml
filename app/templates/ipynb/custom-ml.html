@@ -29,7 +29,7 @@
                             'GTEx Tissue Gene Expression Profiles',
                         ],
                         group='DATASETS',
-                    ) }}
+                    ).render() }}
                     <p>The selected datasets will be concatenated and used to train the model.</p>
                     
                     {{ TargetClassSearchField(
@@ -44,13 +44,13 @@
                             'tumor',
                         ],
                         group='DATASETS',
-                    ) }}
+                    ).render() }}
                     <input type="button" name="next" class="next action-button" value="Next"/>
                 </fieldset>
                 <fieldset>
                     <h2 class="fs-title">SETTINGS</h2>
                     <h3 class="fs-subtitle">From here you can select the various available Machine Learning algorithms, their unique settings, and the methods to use to evaluate the classifier.</h3>
-                    <p>A dimensionality reduction algorithm should be selected to improve the quality of the classifierbe</p>
+                    <p>A dimensionality reduction algorithm should be selected to improve the quality of the classifier</p>
                     {{ ChoiceField(
                         name='dimensionality_reduction_algorithm',
                         label='Dimensionality Reduction Algorithm',
@@ -60,7 +60,7 @@
                             'TruncatedSVD',
                         ],
                         group='SETTINGS'
-                    ) }}
+                    ).render() }}
                     <p>A machine learning algorithm should be selected to construct the predictive model.</p>
                     {{ ChoiceField(
                         name='algorithm',
@@ -71,7 +71,7 @@
                             'RandomForestClassifier',
                         ],
                         group='SETTINGS'
-                    ) }}
+                    ).render() }}
                     <p>Hyper parameter searching is used to automatically select the best parameters (using the primary metric as the criteria).</p>
                     {{ ChoiceField(
                         name='hyper_param_search_type',
@@ -82,7 +82,7 @@
                             'GridSearchCV'
                         ],
                         group='Algorithm'
-                    ) }}
+                    ).render() }}
                     <p>Cross validation is employed as a strategy to train the model on data that the model hasn't seen before, more folds will ensure that the model is generalizing well.</p>
                     {{ IntField(
                         name='cross_validation_n_folds',
@@ -91,7 +91,7 @@
                         min=2,
                         max=10,
                         group='Algorithm'
-                    ) }}
+                    ).render() }}
                     <p>The primary evaluation metric is used for deciding how we assess the performance of our model.</p>
                     {{ ChoiceField(
                         name='primary_metric',
@@ -137,7 +137,7 @@
                             'f1_weighted'
                         ],
                         group='Algorithm'
-                    ) }}
+                    ).render() }}
                     <p>Additional evaluation metrics can be specified, these metrics will also be reported for all models trained.</p>
                     {{ MultiChoiceField(
                         name='evaluation_metrics',
@@ -183,7 +183,7 @@
                             'f1_weighted'
                         ],
                         group='Algorithm',
-                    ) }}
+                    ).render() }}
                     <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
                     <input type="button" name="next" class="submit next action-button" value="Next"/>
                 </fieldset>
