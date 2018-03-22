@@ -5,17 +5,16 @@
         <div class="col-md-12">
             <form class="custom-predictions-form" ipynb="#ipynb">
                 <ul class="progressbar">
-                    <li class="active">Targets</li>
-                    <li>Algorithm</li>
-                    <li>Evaluation</li>
+                    <li class="active">DATASETS</li>
+                    <li>SETTINGS</li>
+                    <li>LAUNCH</li>
                 </ul>
                 <fieldset>
-                    <h2 class="fs-title">Targets</h2>
-                    <h3 class="fs-subtitle">Select the data to be used in the analysis including relevant datasets and classes of interest.</h2>
-                    <p>We will merge the selected datasets and use them as data to train the model.</p>
+                    <h2 class="fs-title">ATTRIBUTE AND PREDICTION CLASS DATASET SELECTION</h2>
+                    <h3 class="fs-subtitle">Select the datasets to use for learning and classification.</h2>
                     {{ MultiChoiceField(
                         name='attribute_databases',
-                        label='Attribute Selection',
+                        label='Attribute Selection (place cursor inside the box to add more datasets)',
                         hint='Databases to use for prediction',
                         default=[
                             'CCLE Cell Line Gene Expression Profiles',
@@ -29,9 +28,10 @@
                             'BioGPS Cell Line Gene Expression Profiles',
                             'GTEx Tissue Gene Expression Profiles',
                         ],
-                        group='Targets',
+                        group='DATASETS',
                     ) }}
-                    <p>A gene list will be constructed based on associations with the selected class using the relevant dataset that contains the class.</p>
+                    <p>The selected datasets will be concatenated and used to train the model.</p>
+                    
                     {{ TargetClassSearchField(
                         name='target_class',
                         label='Class Selection',
@@ -43,36 +43,36 @@
                             'heart',
                             'tumor',
                         ],
-                        group='Targets',
+                        group='DATASETS',
                     ) }}
                     <input type="button" name="next" class="next action-button" value="Next"/>
                 </fieldset>
                 <fieldset>
-                    <h2 class="fs-title">Algorithm</h2>
-                    <h3 class="fs-subtitle">We will train a machine learning algorirhm to properly classify genes as members of the target gene list in a binary classification problem.</h2>
-                    <p>A dimensionality reduction algorithm should be selected to be applied to the data.</p>
+                    <h2 class="fs-title">SETTINGS</h2>
+                    <h3 class="fs-subtitle">From here you can select the various available Machine Learning algorithms, their unique settings, and the methods to use to evaluate the classifier.</h3>
+                    <p>A dimensionality reduction algorithm should be selected to improve the quality of the classifierbe</p>
                     {{ ChoiceField(
                         name='dimensionality_reduction_algorithm',
                         label='Dimensionality Reduction Algorithm',
-                        default='TruncatedSVD',
+                        default='PCA',
                         choices=[
                             'PCA',
                             'TruncatedSVD',
                         ],
-                        group='Algorithm'
+                        group='SETTINGS'
                     ) }}
-                    <p>A machine learning algorithm should be selected to fit to the data.</p>
+                    <p>A machine learning algorithm should be selected to construct the predictive model.</p>
                     {{ ChoiceField(
                         name='algorithm',
                         label='Machine Learning Algorithm',
-                        default='GradientBoostingClassifier',
+                        default='RandomForestClassifier',
                         choices=[
                             'GradientBoostingClassifier',
                             'RandomForestClassifier',
                         ],
-                        group='Algorithm'
+                        group='SETTINGS'
                     ) }}
-                    <p>Hyper parameter searching is used to automatically select the best algorithm parameters (using the primary metric as the criteria for that).</p>
+                    <p>Hyper parameter searching is used to automatically select the best parameters (using the primary metric as the criteria).</p>
                     {{ ChoiceField(
                         name='hyper_param_search_type',
                         label='Hyper Parameter Search Type',
@@ -83,10 +83,10 @@
                         ],
                         group='Algorithm'
                     ) }}
-                    <p>Cross validation is employed as a strategy to train the model on data it hasn't seen before, more folds will ensure that the model is generalizing well to the data.</p>
+                    <p>Cross validation is employed as a strategy to train the model on data that the model hasn't seen before, more folds will ensure that the model is generalizing well.</p>
                     {{ IntField(
                         name='cross_validation_n_folds',
-                        label='Number of Cross-Validated Folds',
+                        label='Cross-Validated Folds',
                         default=3,
                         min=2,
                         max=10,
@@ -96,7 +96,7 @@
                     {{ ChoiceField(
                         name='primary_metric',
                         label='Primary Evaluation Metric',
-                        default='log_loss',
+                        default='roc_auc',
                         choices=[
                             'explained_variance',
                             'r2',
@@ -188,7 +188,7 @@
                     <input type="button" name="next" class="submit next action-button" value="Next"/>
                 </fieldset>
                 <fieldset>
-                    <h2 class="fs-title">Evaluation</h2>
+                    <h2 class="fs-title">LAUNCH</h2>
                     <h3 id="status" class="fs-subtitle">Loading...</span></h2>
                     <div
                         id="ipynb"
@@ -197,6 +197,7 @@
                         remote="{{ PREFIX }}/"
                         filename="custom-ml"
                     >
+                        <div class="cell"><div class="output_wrapper loading"></div></center>
                     </div>
                     <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
                     <input id="saveButton" type="button" name="save" class="save action-button" disabled=true value="Save"/>
