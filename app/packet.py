@@ -14,6 +14,9 @@ def Status(data):
 def Progress(data):
     return _packet('progress', data)
 
+def Keepalive():
+    return '{}\n'
+
 def Cell(data):
     return _packet('cell', data)
 

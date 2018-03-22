@@ -54,9 +54,9 @@ export function setupRemoteIpynb(ipynb, params) {
                 if(input_prompt.closest('.cell').hasClass('code_cell')) {
                     input_prompt.text('In [*]:')
                 }
-                let cell_output_wrapper = $(cell.find('.output_wrapper')[0])
-                cell_output_wrapper.removeClass('pending')
-                cell_output_wrapper.addClass('loading')
+                let cell_output_status = $(cell.find('.output-status')[0])
+                cell_output_status.removeClass('pending')
+                cell_output_status.addClass('loading')
 
                 current_index = update.value // save the current index
             } else if(update.type == 'status') {
@@ -66,11 +66,7 @@ export function setupRemoteIpynb(ipynb, params) {
             } else if(update.type == 'cell') {
                 if(update.value.cell_type == 'code') {
                     let cell = $($ipynb.find('.cell')[current_index])
-                    let cell_output_wrapper = $(cell.find('.output_wrapper')[0])
-                    let cell_output = $('<div class="output">')
-                    let cell_output_area = $('<div class="output_area">')
-                    let cell_output_subarea = $('<div class="output_subarea">')
-                    cell_output_area.append('<div class="prompt">')
+                    let cell_output_subarea = cell.find('.output_subarea')
                     update.value.outputs.forEach((ele) => {
                         console.log(ele)
                         if(ele.output_type == 'stream') {
@@ -112,13 +108,11 @@ export function setupRemoteIpynb(ipynb, params) {
                             console.warn("Unrecognized output type "+ele.output_type)
                         }
                     })
-                    cell_output_area.append(cell_output_subarea)
-                    cell_output.append(cell_output_area)
-                    cell_output_wrapper.removeClass('loading')
-                    cell_output_wrapper.append(cell_output)
-                    cell.append(cell_output_wrapper)
-                    
-                    let current_cell_ele = $($ipynb.find('.cell')[current_index]).find('.input_prompt')
+                    let cell_output_status = $(cell.find('.output-status')[0])
+                    cell_output_status.removeClass('loading')
+                    cell_output_status.addClass('ready')
+
+                    let current_cell_ele = cell.find('.input_prompt')
                     current_cell_ele.text('In ['+(current_code_cell++)+']:')
                     if(scroll) {
                         $('html, body').animate({
@@ -133,8 +127,27 @@ export function setupRemoteIpynb(ipynb, params) {
                 if(!started) {
                     $ipynb.html(update.value)
                     $ipynb.find('.cell.code_cell').each(function() {
-                        let cell_output_wrapper = $('<div class="output_wrapper pending">')
-                        $(this).append(cell_output_wrapper)
+                        let cell = $(this)
+                        let cell_output_wrapper = $('<div class="output_wrapper">')
+                        let cell_output = $('<div class="output">')
+                        let cell_output_area = $('<div class="output_area">')
+                        let cell_output_prompt = $('<div class="prompt">')
+                        let cell_output_loading = $('<div class="output-status pending">')
+                        let cell_output_source_toggle = $('<div class="source-toggle">')
+                        cell_output_source_toggle.click(function() {
+                            if(cell.find('.input').css('display') == 'flex')
+                                cell.find('.input').css('display', 'none')
+                            else
+                                cell.find('.input').css('display', 'flex')
+                        })
+                        cell_output_prompt.append(cell_output_loading)
+                        cell_output_prompt.append(cell_output_source_toggle)
+                        cell_output_area.append(cell_output_prompt)
+                        let cell_output_subarea = $('<div class="output_subarea">')
+                        cell_output_area.append(cell_output_subarea)
+                        cell_output.append(cell_output_area)
+                        cell_output_wrapper.append(cell_output)
+                        cell.append(cell_output_wrapper)
                     })
                     started = true;
                     $save.attr('disabled', true)

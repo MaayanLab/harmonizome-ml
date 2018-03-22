@@ -4,13 +4,10 @@ import os
 from flask import Flask, request, abort, send_from_directory, render_template, jsonify
 from search import perform_search
 from runtime import process_notebook
-from util import app_dir, PREFIX, globalContext
+from util import app_dir, PREFIX, globalContext, PORT
+from werkzeug.serving import WSGIRequestHandler
 
 app = Flask(__name__, static_url_path=PREFIX)
-
-@app.context_processor
-def inject_prefix():
-    return dict(PREFIX=PREFIX)
 
 @app.route(PREFIX + "/", methods=['GET', 'POST'])
 def api():
@@ -48,4 +45,5 @@ if __name__ == "__main__":
         return send_from_directory('static', path)
 
     # Setup debugging server
-    app.run(host='0.0.0.0', debug=False, port=5000, threaded=True)
+    WSGIRequestHandler.protocol_version = "HTTP/1.1"
+    app.run(host='0.0.0.0', debug=True, port=PORT, threaded=True)
