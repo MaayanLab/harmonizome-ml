@@ -23,4 +23,7 @@ def parse_fields(cell, context):
     if cell_m:
         cell_source = cell_m.group(2)
         for field_m in field_match.finditer(cell_source):
-            yield eval(field_m.group(1), context)
+            try:
+                yield eval(field_m.group(1), context)
+            except:
+                pass

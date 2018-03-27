@@ -17,7 +17,7 @@ ADD ./data/attribute_list.json /app/data/attribute_list.json
 ADD ./data/harmonizome.py /app/data/harmonizome.py
 ADD ./gruntfile.js /app/gruntfile.js
 
-ARG HARMONIZOME_API_PREFIX="/Harmonizome-api"
+ARG HARMONIZOME_API_PREFIX=/Harmonizome-api-dev
 ENV HARMONIZOME_API_PREFIX=${HARMONIZOME_API_PREFIX}
 
 CMD [ "npx", "grunt", "shell:flaskApp" ]

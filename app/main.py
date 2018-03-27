@@ -4,7 +4,7 @@ import os
 from flask import Flask, request, abort, send_from_directory, render_template, jsonify
 from search import perform_search
 from runtime import process_notebook
-from util import app_dir, PREFIX, globalContext, PORT
+from util import app_dir, PREFIX, PORT, DEBUG, globalContext
 from werkzeug.serving import WSGIRequestHandler
 
 app = Flask(__name__, static_url_path=PREFIX)
@@ -46,4 +46,4 @@ if __name__ == "__main__":
 
     # Setup debugging server
     WSGIRequestHandler.protocol_version = "HTTP/1.1"
-    app.run(host='0.0.0.0', debug=True, port=PORT, threaded=True)
+    app.run(host='0.0.0.0', debug=DEBUG, port=PORT, threaded=True)

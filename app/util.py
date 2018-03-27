@@ -1,9 +1,11 @@
 import os
+import json
 
 app_dir = os.path.dirname(os.path.realpath(__file__))
 data_dir = os.path.dirname(os.path.realpath(__file__)) + '/../data'
-PREFIX = '/' + os.environ.get('HARMONIZOME_API_PREFIX', 'Harmonizome-api')
-PORT = int(os.environ.get('HARMONIZOME_API_PORT', '5000'))
+PREFIX = '/' + os.environ.get('HARMONIZOME_API_PREFIX', 'Harmonizome-api-dev')
+PORT = json.loads(os.environ.get('HARMONIZOME_API_PORT', '5000'))
+DEBUG = json.loads(os.environ.get('HARMONIZOME_API_DEBUG', 'true'))
 MYSQL_HOST = os.environ.get('MYSQL_HOST', '')
 MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', '')
 MYSQL_USER = os.environ.get('MYSQL_USER', '')

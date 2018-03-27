@@ -27,7 +27,7 @@ function setupRemote(remote, request, callback) {
         }
     }
     xhttp.open('POST', remote, true);
-    xhttp.setRequestHeader("Connection", "Keep-Alive");
+    // xhttp.setRequestHeader("Connection", "Keep-Alive");
     xhttp.setRequestHeader('Content-type', 'application/json');
     xhttp.send(request);
 }
@@ -35,7 +35,8 @@ function setupRemote(remote, request, callback) {
 export function setupRemoteIpynb(ipynb, params) {
     let $ipynb = $(ipynb)
     let $status = $($ipynb.attr('status'))
-    let $save = $($ipynb.attr('save'))
+    let $savePredictions = $($ipynb.attr('savePredictions'))
+    let $saveNotebook = $($ipynb.attr('saveNotebook'))
     let remote = $ipynb.attr('remote')
     let filename = $ipynb.attr('filename')
     let current_index
@@ -123,6 +124,12 @@ export function setupRemoteIpynb(ipynb, params) {
                 } else {
                     console.warn("Unrecognized cell type")
                 }
+            } else if(update.type == 'download') {
+                $savePredictions.attr('disabled', false)
+                $savePredictions.unbind()
+                $savePredictions.click(function() {
+                    download('predictions.csv', update.value)
+                })
             } else if(update.type == 'notebook') {
                 if(!started) {
                     $ipynb.html(update.value)
@@ -150,12 +157,14 @@ export function setupRemoteIpynb(ipynb, params) {
                         cell.append(cell_output_wrapper)
                     })
                     started = true;
-                    $save.attr('disabled', true)
-                    $save.unbind()
+                    $saveNotebook.attr('disabled', true)
+                    $saveNotebook.unbind()
+                    $savePredictions.attr('disabled', true)
+                    $savePredictions.unbind()
                 } else {
-                    $save.attr('disabled', false)
-                    $save.unbind()
-                    $save.click(function() {
+                    $saveNotebook.attr('disabled', false)
+                    $saveNotebook.unbind()
+                    $saveNotebook.click(function() {
                         download('output.ipynb', update.value)
                     })
                 }
