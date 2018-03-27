@@ -1,5 +1,4 @@
 __pycache__
-!app/templates/*/
 .DS_Store
 .ipynb_checkpoints
 .project
@@ -7,6 +6,7 @@ __pycache__
 *.pyc
 app/static/
 app/templates/*
+!app/templates/*/
 data/*/
 node_modules
 package-lock.json

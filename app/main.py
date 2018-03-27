@@ -19,18 +19,7 @@ def api():
                 return perform_search(field, query)
         elif request.method == 'POST':
             return process_notebook(request.get_json())
-        raise Exception("No such file or directory")
-    except Exception as e:
-        print('Error:', e)
-        return str(e)
-        # abort(404)
-
-@app.route(PREFIX + "/<form>")
-def forms(form):
-    try:
-        if form == 'index.html':
-            form = 'primary'
-        return render_template(form + '.html', **globalContext)
+        return render_template('primary.html', **globalContext)
     except Exception as e:
         print('Error:', e)
         return str(e)

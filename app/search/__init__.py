@@ -8,8 +8,12 @@ def perform_search(field, query=''):
         attr_list = json.load(open(data_dir + '/attribute_list.json', 'r'))
         return Suggest([
             attr
-            for i, attr in enumerate(attr_list)
-            if i < 1000 and query in attr
+            for i, attr in enumerate([
+                attr
+                for attr in attr_list
+                if query in attr
+            ])
+            if i < 1000
         ])
     else:
         raise Exception("Field not found")

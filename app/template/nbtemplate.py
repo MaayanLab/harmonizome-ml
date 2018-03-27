@@ -139,7 +139,7 @@ def init(_globals):
         our jinja2 environment globals and python globals to
         be used for execution of the jinja2-compiled source.
         '''
-        global_internal = dict(_globals(), **env.globals)
+        global_internal = _globals()
         exec(
             env.from_string(cell).render(),
             global_internal,
@@ -151,7 +151,5 @@ def init(_globals):
         scope. Those new variables should be injected into
         the python global scope.
         '''
-        env_global_keys = env.globals.keys()
         for k, v in global_internal.items():
-            if k not in env_global_keys or v != env.globals[k]:
-                _globals()[k] = v
+            _globals()[k] = v
