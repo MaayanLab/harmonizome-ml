@@ -11,6 +11,7 @@ from util import app_dir, globalContext
 app = Flask(__name__, static_url_path='')
 app.jinja_options = dict(
     app.jinja_options,
+    extensions=['jinja2.ext.do'],
     trim_blocks=True,
     lstrip_blocks=True,
 )

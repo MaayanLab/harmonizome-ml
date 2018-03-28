@@ -3,7 +3,7 @@ import re
 import json
 from copy import copy
 from flask import render_template, Markup
-from util import globalContext
+from util import globalContext, data_dir
 
 fields = {}
 def register(field):
@@ -18,18 +18,20 @@ def build_form_fields():
 
 def build_safe_value(context):
     return {
-        field_name: lambda _field=field, _context=context, name=None, **kwargs: _field(**kwargs).safe_value(_context.get(name))
+        field_name: lambda _field=field, _context=context, name=None, **kwargs: _field(**dict(kwargs, name=name, value=_context.get(name)))
         for field_name, field in fields.items()
     }
 
 class Field:
-    def __init__(self, group=None, name=None, label=None, **kwargs):
+    def __init__(self, group=None, name=None, label=None, value=None, **kwargs):
         self.args = dict(
             group=group,
             name=name,
             label=label,
+            value=value,
             **kwargs,
         )
+        self.value = value
     
     def get_field(self):
         return self.__class__.__name__
@@ -46,14 +48,17 @@ class Field:
     
     def constraint(self, value):
         return False
-    
-    def value(self, value):
+
+    def get_value(self, value):
         return value
 
     def safe_value(self, value):
         if self.constraint(value):
-            return Markup(self.value(value))
+            return Markup(self.get_value(value))
         raise Exception('%s constraint not satisfied' % (self.args['label']))
+
+    def __str__(self):
+        return self.safe_value(self.value)
 
 @register
 class StringField(Field):
@@ -77,7 +82,7 @@ class ChoiceField(Field):
             **kwargs,
         )
 
-    def value(self, value):
+    def get_value(self, value):
         if type(self.args['choices']) == dict:
             return self.args['choices'][value]
         else:
@@ -91,7 +96,7 @@ class ChoiceField(Field):
 
 @register
 class MultiChoiceField(ChoiceField):
-    def value(self, value):
+    def get_value(self, value):
         if type(value) == str:
             return [value]
         elif type(value) == list:
@@ -102,7 +107,7 @@ class MultiChoiceField(ChoiceField):
             raise Exception("Invalid MultiChoiceField type")
 
     def constraint(self, value):
-        for v in self.value(value):
+        for v in self.get_value(value):
             if v not in self.args['choices']:
                 return False
         return True
@@ -124,12 +129,21 @@ class IntField(Field):
             return False
 
 @register
+class BoolField(Field):
+    def constraint(self, value):
+        try:
+            bool(value)
+            return True
+        except:
+            return False
+
+@register
 class TextField(StringField):
     pass
 
 @register
 class TextListField(TextField):
-    def value(self, value):
+    def get_value(self, value):
         return Markup(value.split('\n'))
 
 @register
@@ -142,14 +156,19 @@ class SearchField(StringField):
 
 @register
 class TargetClassSearchField(SearchField):
-    def __init__(self, constraint=r'.*', **kwargs): # ^[A-Za-z0-9- \(\),\']+ \([A-Za-z ] from [A-Za-z- ]\)$
-        super().__init__(
-            constraint=constraint,
-            **kwargs,
-        )
-
     def get_field(self):
         return 'SearchField'
+
+    def constraint(self, value):
+        attr_list = json.load(open(data_dir + '/attribute_list.json', 'r'))
+        return value in attr_list
+
+@register
+class TargetField(Field):
+    def __init__(self, **kwargs):
+        super().__init__(
+            **kwargs,
+        )
 
 @register
 class SectionField(Field):

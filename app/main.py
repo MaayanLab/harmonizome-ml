@@ -8,6 +8,12 @@ from util import app_dir, PREFIX, PORT, DEBUG, globalContext
 from werkzeug.serving import WSGIRequestHandler
 
 app = Flask(__name__, static_url_path=PREFIX)
+app.jinja_options = dict(
+    app.jinja_options,
+    extensions=['jinja2.ext.do'],
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
 @app.route(PREFIX + "/", methods=['GET', 'POST'])
 def api():

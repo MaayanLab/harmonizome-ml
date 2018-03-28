@@ -4,7 +4,7 @@ from flask import render_template_string
 from model import build_safe_value
 from .convert import ipynb_import_from_file, ipynb_export_nb
 from util import globalContext
-from template.nbtemplate_parse import render_cell
+from template.nbtemplate_parse import render_notebook
 
 filename_constraint = re.compile(r'^[A-Za-z-_]+$')
 field_match = re.compile(r'\{\{(.+?)\}\}', re.MULTILINE | re.DOTALL)
@@ -22,11 +22,4 @@ def render_ipynb(context):
     )
 
     nb = ipynb_import_from_file(os.path.join('templates', 'ipynb', filename + '.ipynb'))
-
-    for index, cell in enumerate(nb.cells):
-        nb.cells[index].source = render_cell(
-            cell['source'],
-            context,
-        )
-    nb.cells = [cell for cell in nb.cells if cell.source]
-    return nb
+    return render_notebook(nb, context)

@@ -135,11 +135,7 @@ export function setupRemoteIpynb(ipynb, params) {
                     $ipynb.html(update.value)
                     $ipynb.find('.cell.code_cell').each(function() {
                         let cell = $(this)
-                        let cell_output_wrapper = $('<div class="output_wrapper">')
-                        let cell_output = $('<div class="output">')
-                        let cell_output_area = $('<div class="output_area">')
-                        let cell_output_prompt = $('<div class="prompt">')
-                        let cell_output_loading = $('<div class="output-status pending">')
+
                         let cell_output_source_toggle = $('<div class="source-toggle">')
                         cell_output_source_toggle.click(function() {
                             if(cell.find('.input').css('display') == 'flex')
@@ -147,8 +143,14 @@ export function setupRemoteIpynb(ipynb, params) {
                             else
                                 cell.find('.input').css('display', 'flex')
                         })
+                        cell.prepend(cell_output_source_toggle)
+
+                        let cell_output_wrapper = $('<div class="output_wrapper">')
+                        let cell_output = $('<div class="output">')
+                        let cell_output_area = $('<div class="output_area">')
+                        let cell_output_prompt = $('<div class="prompt">')
+                        let cell_output_loading = $('<div class="output-status pending">')
                         cell_output_prompt.append(cell_output_loading)
-                        cell_output_prompt.append(cell_output_source_toggle)
                         cell_output_area.append(cell_output_prompt)
                         let cell_output_subarea = $('<div class="output_subarea">')
                         cell_output_area.append(cell_output_subarea)
@@ -162,6 +164,12 @@ export function setupRemoteIpynb(ipynb, params) {
                     $savePredictions.attr('disabled', true)
                     $savePredictions.unbind()
                 } else {
+                    // Ensure all statuses are complete
+                    $ipynb.find('.output-status.pending').each(function() {
+                        let self = $(this)
+                        self.removeClass('pending')
+                        self.addClass('ready')
+                    })
                     $saveNotebook.attr('disabled', false)
                     $saveNotebook.unbind()
                     $saveNotebook.click(function() {

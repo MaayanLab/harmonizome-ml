@@ -1,0 +1,9 @@
+<div class="ipynb-field">
+    {% if description %}<p>{{ description }}</p>{% endif %}
+    <div class="form-group">
+        <label for="{{ name }}">
+            {{ label }}
+        </label>
+        <input name="{{ name }}" type="checkbox"{% if default %} checked{% endif %}>
+    </div>
+</div>

@@ -4,7 +4,7 @@ from util import data_dir
 from packet import Suggest
 
 def perform_search(field, query=''):
-    if field == 'target_class':
+    if field == 'target':
         attr_list = json.load(open(data_dir + '/attribute_list.json', 'r'))
         return Suggest([
             attr

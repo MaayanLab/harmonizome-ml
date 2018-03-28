@@ -24,9 +24,10 @@ def init(_globals):
     '''
     Jinja environment for jinja templates
     '''
-    from jinja2 import Environment
-    env = Environment()
-
+    import re
+    from jinja2 import Environment, Template, contextfunction
+    env = Environment(extensions=['jinja2.ext.do'])
+    env.filters['re_match'] = lambda target, expr: re.match(expr, str(target)).groups()
     '''
     Basic field_matcher regex  to automatically search for Field
     definitions of the form:
@@ -34,9 +35,8 @@ def init(_globals):
     ...
     )
     '''
-    import re
     field_match = re.compile(
-        r'([A-Za-z_]+)\(.+?\)',
+        r'([A-Za-z_]+)\(',
         re.MULTILINE | re.DOTALL
     )
 
@@ -55,6 +55,7 @@ def init(_globals):
         data""")
     '''
     from IPython.core.magic import register_cell_magic
+    from IPython.display import display, Markdown
 
     @register_cell_magic
     def nbtemplate(line, cell):
@@ -92,8 +93,10 @@ def init(_globals):
         
         print(num) # None
         '''
+        global_internal = _globals()
 
-        def handler(*kargs, **field):
+        @contextfunction
+        def handler(ctx, *kargs, **field):
             '''
             Handler: This function's call signature allows it
             to pretend to be ANY valid python function. If we
@@ -102,25 +105,23 @@ def init(_globals):
             globals as a dict, and to the python environment
             globals as the current or default value.
             '''
-            name = field.get('name')
-            value = field.get('value')
-            default = field.get('default')
-            choices = field.get('choices')
+            class Handler:
+                def __init__(self, **kwargs):
+                    for k,v in kwargs.items():
+                        setattr(self, k, v)
+                    if getattr(self, 'value', None) is None:
+                        self.value = getattr(self, 'default', None)
+                def __str__(self):
+                    if type(getattr(self, 'choices', None)) == dict:
+                        return self.choices.get(self.value)
+                    return str(self.value)
+                __repr__ = __str__
 
-            if name is None or (value is None and default is None):
+            field_handler = Handler(**field)
+            if getattr(field_handler, 'name', None) is None:
                 return
 
-            if value is None:
-                val = field['value'] = default
-            else:
-                val = value
-
-            if type(choices) == dict:
-                val = choices.get(val)
-
-            env.globals[name] = field
-            # _globals()[name] = val
-            return val
+            return field_handler
 
         '''
         Step 1. Find arbitrary function calls that aren't in the
@@ -129,9 +130,9 @@ def init(_globals):
         '''
         for m in field_match.finditer(cell):
             field = m.group(1)
-            if _globals().get(field) is None:
+            if global_internal.get(field, None) is None:
                 env.globals[field] = handler
-            elif env.globals.get(field) is not None:
+            elif env.globals.get(field, None) is not None:
                 del env.globals[field]
 
         '''
@@ -139,17 +140,29 @@ def init(_globals):
         our jinja2 environment globals and python globals to
         be used for execution of the jinja2-compiled source.
         '''
-        global_internal = _globals()
-        exec(
-            env.from_string(cell).render(),
-            global_internal,
-        )
+        
+        template = env.from_string(cell)
+        rendered = template.render()
+        if line == 'markdown':
+            display(Markdown(rendered))
+        elif line == 'code':
+            display(Markdown('```python\n%s\n```' % (rendered)))
+        else:
+            exec(
+                rendered,
+                global_internal,
+            )
 
         '''
         Step 3. Check for new variables in the internal global
-        dict that weren't created by us in the jinja2 global
-        scope. Those new variables should be injected into
-        the python global scope.
+        and pass them to the python global scope. Check for
+        new variables in the template and pass them to the
+        environment global scope.
         '''
         for k, v in global_internal.items():
-            _globals()[k] = v
+            if not k.startswith('_'):
+                _globals()[k] = v
+
+        for k, v in template.module.__dict__.items():
+            if not k.startswith('_'):
+                env.globals[k] = v
