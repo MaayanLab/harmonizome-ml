@@ -23,10 +23,11 @@ def build_safe_value(context):
     }
 
 class Field:
-    def __init__(self, group=None, name=None, label=None, value=None, **kwargs):
+    def __init__(self, group=None, name=None, label=None, value=None, choices=None, **kwargs):
         self.args = dict(
             group=group,
             name=name,
+            choices=choices,
             label=label,
             value=value,
             **kwargs,
@@ -46,11 +47,22 @@ class Field:
             **globalContext,
         ))
     
+    def choices(self):
+        choices = self.args.get('choices', [])
+        if type(choices) == dict:
+            return choices.keys()
+        else:
+            return choices
+
     def constraint(self, value):
-        return False
+        return value in self.choices()
 
     def get_value(self, value):
-        return value
+        choices = self.args.get('choices', [])
+        if type(choices) == dict:
+            return choices[value]
+        else:
+            return value
 
     def safe_value(self, value):
         if self.constraint(value):
@@ -76,31 +88,15 @@ class StringField(Field):
 
 @register
 class ChoiceField(Field):
-    def __init__(self, choices=[], **kwargs):
-        super().__init__(
-            choices=choices,
-            **kwargs,
-        )
-
-    def get_value(self, value):
-        if type(self.args['choices']) == dict:
-            return self.args['choices'][value]
-        else:
-            return value
-    
-    def constraint(self, value):
-        if type(self.args['choices']) == dict:
-            return value in self.args['choices'].keys()
-        elif type(self.args['choices']) == list:
-            return value in self.args['choices']
+    pass
 
 @register
 class MultiChoiceField(ChoiceField):
     def get_value(self, value):
         if type(value) == str:
-            return [value]
+            return [super().get_value(self, value)]
         elif type(value) == list:
-            return value
+            return [super().get_value(self, v) for v in value]
         elif value is None:
             return []
         else:
@@ -108,8 +104,7 @@ class MultiChoiceField(ChoiceField):
 
     def constraint(self, value):
         for v in self.get_value(value):
-            if v not in self.args['choices']:
-                return False
+            return super().constraint(self, v)
         return True
 
 @register
@@ -120,22 +115,14 @@ class IntField(Field):
             max=max,
             **kwargs,
         )
-
-    def constraint(self, value):
-        try:
-            int(value)
-            return True
-        except:
-            return False
+    
+    def choices(self):
+        return list(range(self.args['min'], self.args['max']))
 
 @register
 class BoolField(Field):
-    def constraint(self, value):
-        try:
-            bool(value)
-            return True
-        except:
-            return False
+    def choices(self):
+        return [True, False]
 
 @register
 class TextField(StringField):
@@ -159,16 +146,19 @@ class TargetClassSearchField(SearchField):
     def get_field(self):
         return 'SearchField'
 
-    def constraint(self, value):
-        attr_list = json.load(open(data_dir + '/attribute_list.json', 'r'))
-        return value in attr_list
+    def choices(self):
+        return json.load(open(data_dir + '/class_list.json', 'r'))
+
+class TargetGeneSearchField(SearchField):
+    def get_field(self):
+        return 'SearchField'
+
+    def choices(self):
+        return json.load(open(data_dir + '/gene_list.json', 'r'))
 
 @register
 class TargetField(Field):
-    def __init__(self, **kwargs):
-        super().__init__(
-            **kwargs,
-        )
+    pass
 
 @register
 class SectionField(Field):

@@ -39,7 +39,11 @@ def render_cell(cell, env):
             return None
 
         template = env.from_string(cell_source)
-        rendered = template.render().strip()
+        rendered = '\n'.join(
+            line
+            for line in template.render().splitlines()
+            if line.strip() != ''
+        )
 
         for k, v in template.module.__dict__.items():
             if not k.startswith('_'):

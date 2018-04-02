@@ -25,11 +25,12 @@ def init(_globals):
     Jinja environment for jinja templates
     '''
     import re
-    from jinja2 import Environment, Template, contextfunction
+    from jinja2 import Environment, Template
     env = Environment(extensions=['jinja2.ext.do'])
     env.filters['re_match'] = lambda target, expr: re.match(expr, str(target)).groups()
+
     '''
-    Basic field_matcher regex  to automatically search for Field
+    Basic field_matcher regex to automatically search for Field
     definitions of the form:
     MyField(
     ...
@@ -39,6 +40,26 @@ def init(_globals):
         r'([A-Za-z_]+)\(',
         re.MULTILINE | re.DOTALL
     )
+
+    class Handler:
+        '''
+        Generic Field definition handler
+        '''
+        def __init__(self, **kwargs):
+            for k,v in kwargs.items():
+                setattr(self, k, v)
+            if getattr(self, 'value', None) is None:
+                self.value = getattr(self, 'default', None)
+        def __str__(self):
+            if type(getattr(self, 'choices', None)) == dict:
+                choice = self.choices.get(self.value)
+                if type(choice) == Handler:
+                    return str(choice)
+                else:
+                    print(type(choice))
+                return choice
+            return str(self.value)
+        __repr__ = __str__
 
     '''
     IPython cell magic allows function to execute an entire cell.
@@ -95,8 +116,7 @@ def init(_globals):
         '''
         global_internal = _globals()
 
-        @contextfunction
-        def handler(ctx, *kargs, **field):
+        def handler(*kargs, **field):
             '''
             Handler: This function's call signature allows it
             to pretend to be ANY valid python function. If we
@@ -105,18 +125,6 @@ def init(_globals):
             globals as a dict, and to the python environment
             globals as the current or default value.
             '''
-            class Handler:
-                def __init__(self, **kwargs):
-                    for k,v in kwargs.items():
-                        setattr(self, k, v)
-                    if getattr(self, 'value', None) is None:
-                        self.value = getattr(self, 'default', None)
-                def __str__(self):
-                    if type(getattr(self, 'choices', None)) == dict:
-                        return self.choices.get(self.value)
-                    return str(self.value)
-                __repr__ = __str__
-
             field_handler = Handler(**field)
             if getattr(field_handler, 'name', None) is None:
                 return
@@ -142,12 +150,18 @@ def init(_globals):
         '''
         
         template = env.from_string(cell)
-        rendered = template.render()
+        rendered = '\n'.join(
+            line
+            for line in template.render().splitlines()
+            if line.strip() != ''
+        )
         if line == 'markdown':
             display(Markdown(rendered))
         elif line == 'code':
             display(Markdown('```python\n%s\n```' % (rendered)))
         else:
+            if line == 'code_eval':
+                display(Markdown('```python\n%s\n```' % (rendered)))
             exec(
                 rendered,
                 global_internal,
