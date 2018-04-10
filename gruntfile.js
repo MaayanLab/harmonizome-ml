@@ -77,56 +77,39 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			flask: {
-				command: 'python ./main.py',
+				command: 'python run.py',
 				options: {
 					async: true,
-					execOptions: {
-						cwd: './app'
-					}
 				},
 			},
 			flaskApp: {
-				command: 'python ./main.py',
+				command: 'python run.py',
 				options: {
 					async: false,
-					execOptions: {
-						cwd: './app'
-					}
 				},
 			},
 			uwsgi: {
-				command: 'uwsgi --ini ./uwsgi.ini',
+				command: 'uwsgi --ini app/uwsgi.ini',
 				options: {
 					async: false,
-					execOptions: {
-						cwd: './app'
-					}
 				}
 			},
 			ipynb: {
-				command: 'python ./preprocess.py',
+				command: 'python run.py preprocess',
 				options: {
-					execOptions: {
-						async: false,
-						cwd: './app'
-					}
+					async: false,
 				}
 			},
 			pydeps: {
-				command: 'pip install -r requirements.txt',
+				command: 'pip install -r app/requirements.txt',
 				options: {
-					execOptions: {
-						async: false,
-						cwd: './app'
-					}
+					async: false,
 				}
 			},
 			npmdeps: {
 				command: 'npm install',
 				options: {
-					execOptions: {
-						async: false
-					}
+					async: false
 				}
 			},
 			options: {

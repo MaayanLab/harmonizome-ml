@@ -3,7 +3,7 @@ import re
 import json
 from copy import copy
 from flask import render_template, Markup
-from util import globalContext, data_dir
+from ..util import globalContext, data_dir
 
 fields = {}
 def register(field):
@@ -23,16 +23,17 @@ def build_safe_value(context):
     }
 
 class Field:
-    def __init__(self, group=None, name=None, label=None, value=None, choices=None, **kwargs):
+    def __init__(self, group=None, name=None, label=None, value=None, choices=None, default=None, **kwargs):
         self.args = dict(
             group=group,
             name=name,
             choices=choices,
             label=label,
             value=value,
+            default=default,
             **kwargs,
         )
-        self.value = value
+        self.value = value if value is not None else default
     
     def get_field(self):
         return self.__class__.__name__
@@ -75,7 +76,7 @@ class Field:
 @register
 class StringField(Field):
     def __init__(self, constraint=r'.*', hint=None, **kwargs):
-        super().__init__(
+        super(StringField, self).__init__(
             constraint=constraint,
             hint=hint,
             **kwargs,
@@ -91,12 +92,12 @@ class ChoiceField(Field):
     pass
 
 @register
-class MultiChoiceField(ChoiceField):
+class MultiChoiceField(Field):
     def get_value(self, value):
         if type(value) == str:
-            return [super().get_value(self, value)]
+            return [super(MultiChoiceField, self).get_value(value)]
         elif type(value) == list:
-            return [super().get_value(self, v) for v in value]
+            return [super(MultiChoiceField, self).get_value(v) for v in value]
         elif value is None:
             return []
         else:
@@ -104,13 +105,13 @@ class MultiChoiceField(ChoiceField):
 
     def constraint(self, value):
         for v in self.get_value(value):
-            return super().constraint(self, v)
+            return super(MultiChoiceField, self).constraint(v)
         return True
 
 @register
 class IntField(Field):
     def __init__(self, min=0, max=10, **kwargs):
-        super().__init__(
+        super(IntField, self).__init__(
             min=min,
             max=max,
             **kwargs,
@@ -136,7 +137,7 @@ class TextListField(TextField):
 @register
 class SearchField(StringField):
     def __init__(self, hints=[], **kwargs):
-        super().__init__(
+        super(SearchField, self).__init__(
             hints=hints,
             **kwargs,
         )
@@ -149,6 +150,7 @@ class TargetClassSearchField(SearchField):
     def choices(self):
         return json.load(open(data_dir + '/class_list.json', 'r'))
 
+@register
 class TargetGeneSearchField(SearchField):
     def get_field(self):
         return 'SearchField'
@@ -163,7 +165,7 @@ class TargetField(Field):
 @register
 class SectionField(Field):
     def __init__(self, content='', **kwargs):
-        super().__init__(
+        super(SectionField, self).__init__(
             content=content,
             **kwargs,
         )
@@ -185,7 +187,7 @@ class LaunchField(SectionField):
 @register
 class DescriptionField(Field):
     def __init__(self, content='', **kwargs):
-        super().__init__(
+        super(DescriptionField, self).__init__(
             content=content,
             **kwargs,
         )

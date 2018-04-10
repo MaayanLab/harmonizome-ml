@@ -2,8 +2,8 @@ import traceback
 import sys
 import time
 from flask import Response, stream_with_context, current_app
-from packet import *
-from util import data_dir
+from ..packet import *
+from ..util import data_dir
 from .render import render_ipynb
 from .convert import ipynb_export_html, ipynb_export_nb
 from .execute import CustomExecutePreprocessor, CellExecutionError

@@ -2,19 +2,12 @@
 
 import os
 import nbformat
-from flask import Flask, render_template
-from model import build_form_fields
-from runtime import ipynb_import_from_file
-from template.nbtemplate_parse import parse_fields
-from util import app_dir, globalContext
-
-app = Flask(__name__, static_url_path='')
-app.jinja_options = dict(
-    app.jinja_options,
-    extensions=['jinja2.ext.do'],
-    trim_blocks=True,
-    lstrip_blocks=True,
-)
+from flask import render_template
+from . import app
+from .model import build_form_fields
+from .runtime import ipynb_import_from_file
+from .template.nbtemplate_parse import parse_fields
+from .util import app_dir, globalContext
 
 @app.template_filter('filter')
 def reverse_filter(arr, attr, val):
@@ -26,56 +19,57 @@ def reverse_filter(arr, attr, val):
           for v in  arr
           if maybe_eval(getattr(v, attr)) == val]
 
-with app.test_request_context('/'):
-  for _, _, files in os.walk(app_dir + '/templates/ipynb/'):
-    for file in files:
-      file, ext = os.path.splitext(file)
-      if ext != '.ipynb':
-        continue
+def main():
+  with app.test_request_context('/'):
+    for _, _, files in os.walk(app_dir + '/templates/ipynb/'):
+      for file in files:
+        file, ext = os.path.splitext(file)
+        if ext != '.ipynb':
+          continue
 
-      print('Building %s...' % (file))
+        print('Building %s...' % (file))
 
-      nb = ipynb_import_from_file(
-        app_dir + '/templates/ipynb/%s.ipynb' % (file)
-      )
+        nb = ipynb_import_from_file(
+          app_dir + '/templates/ipynb/%s.ipynb' % (file)
+        )
 
-      context = dict(
-        filename=file,
-        **globalContext,
-        **build_form_fields(),
-      )
+        context = dict(
+          filename=file,
+          **globalContext,
+          **build_form_fields(),
+        )
 
-      fields = [field
-                 for cell in nb.cells
-                 for field in parse_fields(
-                   cell['source'],
-                   context,
-                 )]
+        fields = [field
+                  for cell in nb.cells
+                  for field in parse_fields(
+                    cell['source'],
+                    context,
+                  )]
 
-      form_out = open(app_dir + '/templates/%s.html' % (file), 'w')
+        form_out = open(app_dir + '/templates/%s.html' % (file), 'w')
 
-      try:
-        if os.path.isfile(app_dir + '/templates/ipynb/%s.html' % (file)):
-          # Custom template
-          print(
-            render_template('ipynb/%s.html' % (file),
-              **context,
-              fields=fields,
-            ),
-            file=form_out,
-          )
-        else:
-          # General template
-          print(
-            render_template('layout/ipynb.j2',
-              **context,
-              fields=fields,
-            ),
-            file=form_out,
-          )
-      except Exception as e:
-        print(e)
-      finally:
-        form_out.close()
+        try:
+          if os.path.isfile(app_dir + '/templates/ipynb/%s.html' % (file)):
+            # Custom template
+            print(
+              render_template('ipynb/%s.html' % (file),
+                **context,
+                fields=fields,
+              ),
+              file=form_out,
+            )
+          else:
+            # General template
+            print(
+              render_template('layout/ipynb.j2',
+                **context,
+                fields=fields,
+              ),
+              file=form_out,
+            )
+        except Exception as e:
+          print(e)
+        finally:
+          form_out.close()
 
-    break
+      break

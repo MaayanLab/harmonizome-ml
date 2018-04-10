@@ -1,7 +1,7 @@
 import pymysql
 import json
-from util import data_dir
-from packet import Suggest
+from .util import data_dir
+from .packet import Suggest
 
 def perform_search(field, query=''):
     if field == 'target_class':
