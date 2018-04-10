@@ -1,12 +1,15 @@
 <div class="ipynb-field">
     <p>{{ description }}</p>
-    <select>
+    <label for="_{{ name }}_type">
+        {{ label }}
+    </label>
+    <select name="_{{ name }}_type">
         {% for choice in choices.keys() %}
             <option>{{ choice }}</option>
         {% endfor %}
     </select>
     {% for choice_name, choice in choices.items() %}
-        <div class="meta-choice" name="{{ choice_name }}">
+        <div class="meta-choice" id="_{{ choice_name }}">
             {{ choice.render() }}
         </div>
     {% endfor %}

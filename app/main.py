@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-from flask import Flask, request, abort, send_from_directory, render_template, jsonify
-from search import perform_search
-from runtime import process_notebook
-from util import app_dir, PREFIX, PORT, DEBUG, globalContext
+from flask import request, abort, send_from_directory, render_template, jsonify
 from werkzeug.serving import WSGIRequestHandler
-
-app = Flask(__name__, static_url_path=PREFIX)
-app.jinja_options = dict(
-    app.jinja_options,
-    extensions=['jinja2.ext.do'],
-    trim_blocks=True,
-    lstrip_blocks=True,
-)
+from . import app
+from .search import perform_search
+from .runtime import process_notebook
+from .util import app_dir, PREFIX, PORT, DEBUG, globalContext
 
 @app.route(PREFIX + "/", methods=['GET', 'POST'])
 def api():
@@ -31,7 +24,7 @@ def api():
         return str(e)
         # abort(404)
 
-if __name__ == "__main__":
+def main():
     # Only for debugging while developing
 
     # Route static path

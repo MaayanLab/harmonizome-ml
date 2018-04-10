@@ -1,10 +1,10 @@
 import os
 import re
 from flask import render_template_string
-from model import build_safe_value
 from .convert import ipynb_import_from_file, ipynb_export_nb
-from util import globalContext
-from template.nbtemplate_parse import render_notebook
+from ..model import build_safe_value
+from ..util import globalContext
+from ..template.nbtemplate_parse import render_notebook
 
 filename_constraint = re.compile(r'^[A-Za-z-_]+$')
 field_match = re.compile(r'\{\{(.+?)\}\}', re.MULTILINE | re.DOTALL)
