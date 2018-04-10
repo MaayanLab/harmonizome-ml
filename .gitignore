@@ -1,5 +1,6 @@
 __pycache__
 .DS_Store
+.gradle
 .ipynb_checkpoints
 .project
 .settings
@@ -7,6 +8,7 @@ __pycache__
 app/static/
 app/templates/*
 !app/templates/*/
+build/
 data/*/
 node_modules
 package-lock.json

@@ -142,6 +142,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-shell-spawn')
+	grunt.loadNpmTasks('grunt-continue')
 
 	grunt.registerTask('prepare', [
 		'shell:pydeps',
@@ -159,8 +160,13 @@ module.exports = function(grunt) {
 	grunt.registerTask('start:flask', [
 		'shell:flask',
 		'build',
+		'continue:on',
 		'watch',
-		'shell:flask:kill'
+		'continue:off',
+		'shell:flask:kill',
+	])
+	grunt.registerTask('start:flaskApp', [
+		'shell:flaskApp',
 	])
 	grunt.registerTask('start:uwsgi', [
 		'build',
