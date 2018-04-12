@@ -98,4 +98,13 @@ export function setupForm(form) {
             $input.val(Math.max(min, Number($input.val()) - 1))
         })
     })
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        let $target = $(e.target)
+        let $tablist = $target.closest('ul[role="tablist"]')
+
+        let type_field = $($tablist.attr('target'))
+        let choice = $target.attr('target')
+
+        type_field.val(choice)
+    })
 }

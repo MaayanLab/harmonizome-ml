@@ -1,16 +1,38 @@
 <div class="ipynb-field">
     <p>{{ description }}</p>
-    <label for="_{{ name }}_type">
+    <label for="{{ name }}">
         {{ label }}
     </label>
-    <select name="_{{ name }}_type">
-        {% for choice in choices.keys() %}
-            <option>{{ choice }}</option>
+    <div>
+        <ul class="nav nav-tabs nav-justified" role="tablist" target="#{{ name }}">
+        {% for choice_name, choice in choices.items() %}
+            <li
+                role="presentation"
+                class="{% if default == choice_name %} active{% endif %}"
+            >
+                <a
+                    href="#tab-content-{{ name }}-{{ choice_name }}"
+                    aria-controls="tab-content-{{ name }}-{{ choice_name }}"
+                    target="{{ choice_name }}"
+                    role="tab"
+                    data-toggle="tab"
+                >
+                    {{ choice_name }}
+                </a>
+            </li>
         {% endfor %}
-    </select>
-    {% for choice_name, choice in choices.items() %}
-        <div class="meta-choice" id="_{{ choice_name }}">
-            {{ choice.render() }}
+        </ul>
+        <div class="tab-content">
+        {% for choice_name, choice in choices.items() %}
+            <div
+                role="tabpanel"
+                class="tab-pane fade{% if default == choice_name %} in active{% endif %}"
+                id="tab-content-{{ name }}-{{ choice_name }}"
+            >
+                {{ choice.render() }}
+            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
+    </div>
+    <input type="text" class="hidden" id="{{ name }}" name="{{ name }}" value="{{ default }}" />
 </div>
