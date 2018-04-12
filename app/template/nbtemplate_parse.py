@@ -2,10 +2,11 @@ import re
 import nbformat as nbf
 from jinja2 import Environment
 from flask import current_app
+from .function_call_parse import FunctionCallMatcher
 
 cell_match = re.compile(r'^#?%%nbtemplate(.*?\n)(.+)$', re.MULTILINE | re.DOTALL)
 template_match = re.compile(r'\{[\{%](.+?)[%\}]\}', re.MULTILINE | re.DOTALL)
-field_match = re.compile(r'([A-Za-z_]+\(([\'"].+?[\'"]|.)+?\))', re.MULTILINE | re.DOTALL)
+field_match = FunctionCallMatcher()
 
 def render_notebook(nb, context):
     env = Environment(extensions=['jinja2.ext.do'])
@@ -64,6 +65,6 @@ def parse_fields(cell, context):
         for template_m in template_match.finditer(cell_source):
             for field_m in field_match.finditer(template_m.group(1)):
                 try:
-                    yield eval(field_m.group(1), context)
+                    yield eval(field_m, context)
                 except:
                     pass

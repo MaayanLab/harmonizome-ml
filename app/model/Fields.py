@@ -117,8 +117,17 @@ class IntField(Field):
             **kwargs,
         )
     
+    def get_value(self, value):
+        if type(value) == str:
+            return int(value)
+        return value
+
     def choices(self):
         return list(range(self.args['min'], self.args['max']))
+    
+    def constraint(self, value):
+        val = self.get_value(value)
+        return val >= self.args['min'] and val <= self.args['max']
 
 @register
 class BoolField(Field):
