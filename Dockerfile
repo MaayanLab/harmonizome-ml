@@ -13,8 +13,10 @@ RUN set -x \
 EXPOSE 5000
 
 ADD ./app/ /app/app
-ADD ./data/attribute_list.json /app/data/attribute_list.json
+ADD ./data/gene_list.json /app/data/gene_list.json
+ADD ./data/class_list.json /app/data/class_list.json
 ADD ./data/harmonizome.py /app/data/harmonizome.py
+ADD ./run.py /app/run.py
 ADD ./gruntfile.js /app/gruntfile.js
 
 ARG HARMONIZOME_API_PREFIX=Harmonizome-ML

@@ -52,7 +52,7 @@ def render_cell(cell, env):
 
         if line == 'markdown':
             cell = nbf.v4.new_markdown_cell(rendered)
-        elif line == 'hide' or rendered == '':
+        elif line == 'hide' or line == 'hide_code' or line == 'hide_code_eval' or rendered == '':
             cell = None
         else:
             cell = nbf.v4.new_code_cell(rendered)

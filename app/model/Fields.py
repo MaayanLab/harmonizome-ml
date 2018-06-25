@@ -141,7 +141,7 @@ class TextField(StringField):
 @register
 class TextListField(TextField):
     def get_value(self, value):
-        return Markup(value.split('\n'))
+        return value.split('\n')
 
 @register
 class SearchField(StringField):

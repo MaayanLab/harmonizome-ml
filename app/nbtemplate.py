@@ -81,10 +81,10 @@ def init(_globals):
         )
         if line == 'markdown':
             display(Markdown(rendered))
-        elif line == 'code':
+        elif line == 'code'  or line == 'hide_code':
             display(Markdown('```python\n%s\n```' % (rendered)))
         else:
-            if line == 'code_eval':
+            if line == 'code_eval' or line == 'hide_code_eval':
                 display(Markdown('```python\n%s\n```' % (rendered)))
             exec(
                 rendered,

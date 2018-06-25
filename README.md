@@ -32,8 +32,3 @@ grunt build
 ```
 docker-compose up
 ```
-
-## Gradle
-```
-gradle --no-daemon runProject
-```
