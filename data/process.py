@@ -27,8 +27,20 @@ where
     dataset.resource_fk=resource.id;
 ''')
 entries = dict(list(cur))
-con.close()
 entries
+
+cur = con.cursor()
+cur.execute('''
+select
+    *
+from
+    dataset;
+''')
+datasets = list(cur)
+con.close()
+
+label = [desc[0] for desc in cur.description]
+[dict(zip(label, dataset)) for dataset in datasets]
 
 omics_datasets = list(map(entries.get, '''Cancer Cell Line Encyclopedia	Cell Line Gene Expression Profiles
 Encyclopedia of DNA Elements	Transcription Factor Targets
@@ -133,3 +145,5 @@ print(
         for entry in entries.items()
         if all_omics_datasets.get(entry[0]) is None and all_attribute_datasets.get(entry[0]) is None
     ]))
+
+con.close()

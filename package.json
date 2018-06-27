@@ -4,7 +4,16 @@
   "description": "The backend for custom machine learning analysis processing.",
   "author": "Daniel J. B. Clarke",
   "license": "Apache-2.0",
-  "dependencies": {},
+  "dependencies": {
+    "@shopify/draggable": "^1.0.0-beta.7",
+    "at.js": "^1.5.4",
+    "bootstrap": "^3.3.7",
+    "draggable": "^4.2.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "jquery.caret": "^0.3.1",
+    "select2": "^4.0.6-rc.1"
+  },
   "scripts": {
     "start": "grunt start:flask",
     "build": "grunt build",
@@ -21,6 +30,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-less": "^1.4.1",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-reload": "^0.2.0",
     "grunt-shell-spawn": "^0.3.10",
     "grunt-wait-server": "^0.3.0"
   }

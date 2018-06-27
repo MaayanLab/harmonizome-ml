@@ -1,0 +1,167 @@
+<html>
+<head>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css" />
+  <style>
+    .draggable {
+      z-index: 2;
+    }
+    .dropzone {
+      min-height: 250px;
+      max-height: 250px;
+      overflow-y: scroll;
+    }
+    .table-desc {
+      table-layout: fixed;
+    }
+    .table-desc th {
+      width: 200px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px;
+    }
+    .table-desc td {
+      width: 100px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px;
+    }
+    .table-desc tr {
+      height: 40px;
+      text-align: center;
+      vertical-align: middle;
+      padding: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-header">
+          <h1>Harmonizome-ML</h1>
+          <p>
+            User-driven, custom machine learning analysis on Harmonizome datasets for biomedical knowledge imputation.
+            Select datasets of interest, prediction targets, and the algorithm(s) relevant to your analysis.
+            A jupyter notebook is generated to perform your custom analysis.
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="alert alert-info alter-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          Drag the Harmonizome databases you wish to utilize for training and labeling.
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Training datasets</h3>
+          </div>
+          <div class="panel-body dropzone" data-dropzone="1">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Analysis</h3>
+          </div>
+          <div class="panel-body">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Label datasets</h3>
+          </div>
+          <div class="panel-body dropzone" data-dropzone="2">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="alert alert-info alter-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          Search for attributes of interest, revealing datasets of relevance.
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search through harmonizome...">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">Go!</button>
+          </span>
+        </div>
+        <p>&nbsp;</p>
+      </div>
+      <div class="col-lg-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Available databases</h3>
+          </div>
+          <div class="panel-body dropzone" data-dropzone="0">
+            {% for dataset in data %}
+            <div class="panel panel-info draggable">
+              <div class="panel-heading" data-toggle="collapse" data-target="#panel-body-{{ dataset.id }}" >
+                <h3 class="panel-title">{{ dataset.name }}</h3>
+              </div>
+              <div class="panel-body collapse" id="panel-body-{{ dataset.id }}" aria-expanded="false">
+                <p><b>Description:</b> {{ dataset.description }}</p>
+                <p><b>Association:</b> {{ dataset.association }}</p>
+              </div>
+              <div class="panel-footer">
+                <table class="table-desc" border="2">
+                  <tr><td>&nbsp;</td><th colspan="2">{{ dataset.attribute_type_plural }}</th></tr>
+                  <tr><th rowspan="2">genes</th><td colspan="2" rowspan="2">{{ dataset.evidence_type }}</td></tr>
+                  <tr></tr>
+                </table>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="node_modules/@shopify/draggable/lib/draggable.bundle.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/select2/dist/js/select2.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script>
+    var sortable = new Draggable.Sortable(
+      document.querySelectorAll('.dropzone'),
+      { draggable: '.draggable' }
+    );
+
+    sortable.on('drag:start', (evt) => {
+      currentMediumChildren = sortable.getDraggableElementsForContainer(sortable.containers[1]).length;
+      capacityReached = currentMediumChildren === containerTwoCapacity;
+      lastOverContainer = evt.sourceContainer;
+      containerTwoParent.classList.toggle(Classes.capacity, capacityReached);
+    });
+  
+    sortable.on('sortable:sort', (evt) => {
+      if (!capacityReached) {
+        return;
+      }
+  
+      const sourceIsCapacityContainer = evt.dragEvent.sourceContainer === sortable.containers[1];
+  
+      if (!sourceIsCapacityContainer && evt.dragEvent.overContainer === sortable.containers[1]) {
+        evt.cancel();
+      }
+    });
+  
+    sortable.on('sortable:sorted', (evt) => {
+      if (lastOverContainer === evt.dragEvent.overContainer) {
+        return;
+      }
+  
+      lastOverContainer = evt.dragEvent.overContainer;
+    });
+  
+  </script>
+</body>
+</html>

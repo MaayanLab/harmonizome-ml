@@ -1,0 +1,294 @@
+{% macro block(id_prefix, heading, category) %}
+<div class="panel panel-info draggable">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ heading }}</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div id="{{ id_prefix }}-blocks" />
+      <div class="col-sm-12 right"
+    </div>
+  </div>
+</div>
+{% endmacro %}
+<html>
+<head>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css" />
+  <link rel="stylesheet" href="node_modules/at.js/dist/css/jquery.atwho.min.css" />
+  <style>
+    .ml-layout .panel {
+      margin-bottom: 0px;
+    }
+    .ml-layout > .panel-body {
+      height: 150px;
+      overflow-y: scroll;
+    }
+    .ml-layout > div {
+      align-self: center;
+      justify-self: stretch;
+    }
+    .ml-layout > .training-datasets {
+      grid-area: training-datasets;
+    }
+    .ml-layout > .label-datasets {
+      grid-area: label-datasets;
+    }
+    .ml-layout > .eta {
+      grid-area: eta;
+    }
+    .ml-layout > .down-arrow-1 {
+      grid-area: down-arrow-1;
+    }
+    .ml-layout > .down-arrow-2 {
+      grid-area: down-arrow-2;
+    }
+    .ml-layout > .dimensionality-reduction {
+      grid-area: dimensionality-reduction;
+    }
+    .ml-layout > .target {
+      grid-area: target;
+    }
+    .ml-layout > .right-arrow-1 {
+      grid-area: right-arrow-1;
+    }
+    .ml-layout > .right-arrow-2 {
+      grid-area: right-arrow-2;
+    }
+    .ml-layout > .understand-data {
+      grid-area: understand-data;
+    }
+    .ml-layout > .machine-learning {
+      grid-area: machine-learning;
+    }
+    .ml-layout > .validation {
+      grid-area: validation;
+    }
+    .ml-layout > .understand-model {
+      grid-area: understand-model;
+    }
+    .ml-layout {
+      display: grid;
+    }
+    @media screen and (max-width: 768px) {
+      .ml-layout {
+        grid-row-gap: 5px;
+        grid-column-gap: 10px;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 0fr 1fr 1fr 0fr 1fr 0fr 1fr 1fr 0fr 1fr;
+        grid-template-areas:
+          "training-datasets"
+          "label-datasets"
+          "down-arrow-1"
+          "dimensionality-reduction"
+          "target"
+          "right-arrow-1"
+          "understand-data"
+          "down-arrow-2"
+          "machine-learning"
+          "validation"
+          "right-arrow-2"
+          "understand-model";
+      }
+    }
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+      .ml-layout {
+        grid-row-gap: 5px;
+        grid-column-gap: 10px;
+        grid-template-columns: 1fr 0fr 1fr;
+        grid-template-rows: 1fr 0fr 1fr 1fr 0fr 1fr 1fr;
+        grid-template-areas:
+          "training-datasets training-datasets training-datasets"
+          "label-datasets label-datasets label-datasets"
+          ". down-arrow-1 ."
+          "dimensionality-reduction right-arrow-1 understand-data"
+          "target right-arrow-1 understand-data"
+          ". down-arrow-2 ."
+          "machine-learning right-arrow-2 understand-model"
+          "validation right-arrow-2 understand-model";
+      }
+    }
+    @media screen and (min-width: 992px) {
+      .ml-layout {
+        grid-row-gap: 5px;
+        grid-column-gap: 10px;
+        grid-template-columns: 1fr 0fr 1fr 0fr 1fr;
+        grid-template-rows: 1fr 0fr 1fr 0fr 1fr;
+        grid-template-areas:
+          "training-datasets . label-datasets . ."
+          ". down-arrow-1 . . ."
+          "dimensionality-reduction . target right-arrow-1 understand-data"
+          ". down-arrow-2 . . ."
+          "machine-learning . validation right-arrow-2 understand-model";
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="page-header">
+          <h1>Harmonizome-ML</h1>
+          <p>
+            User-driven, custom machine learning analysis on Harmonizome datasets for biomedical knowledge imputation.
+            Select datasets of interest, prediction targets, and the algorithm(s) relevant to your analysis.
+            A jupyter notebook is generated to perform your custom analysis.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="search">Write your analysis in human readable form!</label>
+          <textarea
+            id="search"
+            class="form-control rounded-1"
+            rows="4"
+          ></textarea>
+        </div>
+        <p>
+          Try an example!
+          {% macro example(label) -%}
+            {% set id = 'example'+label|replace(' ', '_') %}
+            <textarea id="{{ id }}" style="display: none;">{{ caller() }}</textarea>
+            <a
+              href="javascript:$('#search').text($('#{{ id }}').text().replace(/\s+/g,' '))"
+              class="label label-primary"
+              style="margin-right: 5px"
+            >
+              {{ label }}
+            </a>
+          {%- endmacro %}
+          {% call example("class target") -%}
+            Using Stochastic Gradient Descent on the Allan Brain Atlas,
+            which genes when inhibited in mice might exhibit an abnormal igm level?
+          {%- endcall %}
+          {% call example("gene target") -%}
+            Using a Random Forest Classifier on ENCODE and ChEA Transcription Factor targets,
+            which genes are most associated with small intestine cancer?
+          {%- endcall %}
+        </p>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="ml-layout">
+          {% macro module(cls, label) %}
+            <div class="{{ cls }}">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h3 class="panel-title">{{ label }}</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="elements">
+                    </div>
+                    <div class="col-sm-12 text-right">
+                      <a href="javascript:add('{{ cls }}')" style="color: inherit">
+                        <i class="fa fa-plus-square-o" style="font-size:32px"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endmacro %}
+          {% macro icon(cls, icn) %}
+          <div class="{{ cls }}">
+            <div class="text-center">
+              <i class="fa fa-{{ icn }}" style="font-size:48px"></i>
+            </div>
+          </div>
+          {% endmacro %}
+          
+          {{ module("training-datasets", "Training datasets [ X ]") }}
+          {{ module("label-datasets", "Label datasets [ Y ]") }}
+          {{ icon("down-arrow-1", "arrow-down") }}
+          {{ module("dimensionality-reduction", "Dimensionality Reduction [ F(X) = x ]") }}
+          {{ module("target", "Target [ G(Y) = y ]") }}
+          {{ icon("right-arrow-1", "arrow-right") }}
+          {{ module("understand-data", "Understand Data") }}
+          {{ icon("down-arrow-2", "arrow-down") }}
+          {{ module("machine-learning", "Machine Learning [ F(x) = y ]") }}
+          {{ module("validation", "Validation [ F(x) = y ? ]") }}
+          {{ icon("right-arrow-2", "arrow-right") }}
+          {{ module("understand-model", "Understand Model") }}
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 15px">
+      <div class="col-lg-12 text-center">
+        <button type="button" class="btn btn-lg btn-primary disabled">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="node_modules/@shopify/draggable/lib/draggable.bundle.js"></script>
+  <script src="node_modules/@shopify/draggable/lib/draggable.bundle.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/select2/dist/js/select2.min.js"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/jquery.caret/dist/jquery.caret.min.js"></script>
+  <script src="node_modules/at.js/dist/js/jquery.atwho.min.js"></script>
+
+  <script>
+    var autocomplete_cache = {}
+    var suggest_cache = {}
+
+    function create_element(element) {
+      console.log(element)
+      var $el = $('<div id="' + element.id + '"></div>')
+      $el.text(JSON.stringify(element))
+      return $el
+    }
+
+    function suggest(data) {
+      console.log('suggest')
+      Object.keys(data).map(function(mod) {
+        var $elements = $('.' + mod + ' .elements')
+        data[mod].map(function(el) {
+          if (!$elements.find('#' + el.id).length) {
+            create_element(el)
+              .appendTo($elements)
+          }
+        })
+      })
+    }
+
+    $('#search').atwho({
+      at: '',
+      callbacks: {
+        remoteFilter: function(query, callback) {
+          if(autocomplete_cache[query] !== undefined) {
+            callback(autocomplete_cache[query])
+          } else {
+            $.getJSON('{{ PREFIX }}/autocomplete', {
+              q: query,
+            }, function(data) {
+              autocomplete_cache[query] = data
+              callback(data)
+            })
+          }
+        }
+      }
+    })
+    $('#search').on('keyup', function(e) {
+      if(suggest_cache[e.text] !== undefined) {
+        suggest(suggest_cache[e.text])
+      } else {
+        $.getJSON('{{ PREFIX }}/suggest', {
+          q: e.text,
+        }, function(data) {
+          suggest_cache[e.text] = data
+          suggest(data)
+        })
+      }
+    })
+  </script>
+  
+</body>
+</html>
