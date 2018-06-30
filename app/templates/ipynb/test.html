@@ -35,9 +35,6 @@
     .ml-layout > .label-datasets {
       grid-area: label-datasets;
     }
-    .ml-layout > .eta {
-      grid-area: eta;
-    }
     .ml-layout > .down-arrow-1 {
       grid-area: down-arrow-1;
     }
@@ -154,7 +151,7 @@
             {% set id = 'example'+label|replace(' ', '_') %}
             <textarea id="{{ id }}" style="display: none;">{{ caller() }}</textarea>
             <a
-              href="javascript:$('#search').text($('#{{ id }}').text().replace(/\s+/g,' '))"
+              href="javascript:$('#search').val($('#{{ id }}').text().replace(/\s+/g,' '));update_suggest()"
               class="label label-primary"
               style="margin-right: 5px"
             >
@@ -176,9 +173,9 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="ml-layout">
-          {% macro module(cls, label) %}
+          {% macro module(cls, label, required) %}
             <div class="{{ cls }}">
-              <div class="panel panel-primary">
+              <div class="panel panel-{% if required %}primary{% else %}info{% endif %}">
                 <div class="panel-heading">
                   <h3 class="panel-title">{{ label }}</h3>
                 </div>
@@ -204,24 +201,24 @@
           </div>
           {% endmacro %}
           
-          {{ module("training-datasets", "Training datasets [ X ]") }}
-          {{ module("label-datasets", "Label datasets [ Y ]") }}
+          {{ module("training-datasets", "Training datasets [ X ]", True) }}
+          {{ module("label-datasets", "Label datasets [ Y ]", True) }}
           {{ icon("down-arrow-1", "arrow-down") }}
-          {{ module("dimensionality-reduction", "Dimensionality Reduction [ F(X) = x ]") }}
-          {{ module("target", "Target [ G(Y) = y ]") }}
+          {{ module("dimensionality-reduction", "Dimensionality Reduction [ F(X) = x ]", False) }}
+          {{ module("target", "Target [ G(Y) = y ]", False) }}
           {{ icon("right-arrow-1", "arrow-right") }}
-          {{ module("understand-data", "Understand Data") }}
+          {{ module("understand-data", "Understand Data", False) }}
           {{ icon("down-arrow-2", "arrow-down") }}
-          {{ module("machine-learning", "Machine Learning [ F(x) = y ]") }}
-          {{ module("validation", "Validation [ F(x) = y ? ]") }}
+          {{ module("machine-learning", "Machine Learning [ F(x) = y ]", True) }}
+          {{ module("validation", "Validation [ F(x) = y ? ]", False) }}
           {{ icon("right-arrow-2", "arrow-right") }}
-          {{ module("understand-model", "Understand Model") }}
+          {{ module("understand-model", "Understand Model", True) }}
         </div>
       </div>
     </div>
     <div class="row" style="margin-top: 15px">
       <div class="col-lg-12 text-center">
-        <button type="button" class="btn btn-lg btn-primary disabled">
+        <button id="submitBtn" type="button" class="btn btn-lg btn-primary disabled">
           Submit
         </button>
       </div>
@@ -240,23 +237,52 @@
     var suggest_cache = {}
 
     function create_element(element) {
-      console.log(element)
       var $el = $('<div id="' + element.id + '"></div>')
       $el.text(JSON.stringify(element))
       return $el
     }
 
     function suggest(data) {
-      console.log('suggest')
       Object.keys(data).map(function(mod) {
         var $elements = $('.' + mod + ' .elements')
+        $elements.empty()
         data[mod].map(function(el) {
-          if (!$elements.find('#' + el.id).length) {
-            create_element(el)
-              .appendTo($elements)
-          }
+          create_element(el)
+            .appendTo($elements)
         })
       })
+      update_submit()
+    }
+
+    function all(L) {
+      for(var i = 0; i < L.length; i++)
+        if(!L[i]) return false
+      return true
+    }
+
+    function update_submit() {
+      if(all(
+        $('.ml-layout .panel-primary .elements').map(function(i, e) {
+          return $(e).children().length
+        })
+      ))
+        $('#submitBtn').removeClass('disabled')
+      else
+        $('#submitBtn').addClass('disabled')
+    }
+
+    function update_suggest() {
+      var text = $('#search').val()
+      if(suggest_cache[text] !== undefined) {
+        suggest(suggest_cache[text])
+      } else {
+        $.getJSON('{{ PREFIX }}/suggest', {
+          q: text,
+        }, function(data) {
+          suggest_cache[text] = data
+          suggest(data)
+        })
+      }
     }
 
     $('#search').atwho({
@@ -276,18 +302,9 @@
         }
       }
     })
-    $('#search').on('keyup', function(e) {
-      if(suggest_cache[e.text] !== undefined) {
-        suggest(suggest_cache[e.text])
-      } else {
-        $.getJSON('{{ PREFIX }}/suggest', {
-          q: e.text,
-        }, function(data) {
-          suggest_cache[e.text] = data
-          suggest(data)
-        })
-      }
-    })
+    $('#search').on('keyup', update_suggest)
+
+    
   </script>
   
 </body>

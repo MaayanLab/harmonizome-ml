@@ -23,6 +23,107 @@ def api():
         print('Error:', e)
         return str(e)
         # abort(404)
+from itertools import count
+n = iter(count())
+test_data = {
+    'training-datasets': [
+        {
+            'id': next(n),
+            'text': 'training-datasets-1',
+            'alias': ['tag-a',],
+        },
+        {
+            'id': next(n),
+            'text': 'training-datasets-2',
+            'alias': ['tag-b',],
+        },
+    ],
+    'label-datasets': [
+        {
+            'id': next(n),
+            'text': 'label-datasets-1',
+            'alias': ['tag-a',],
+        },
+        {
+            'id': next(n),
+            'text': 'label-datasets-2',
+            'alias': ['tag-b',],
+        },
+    ],
+    'dimensionality-reduction': [
+        {
+            'id': next(n),
+            'text': 'T-SNE',
+            'alias': ['dimensionality', 'reduction', 'tsne',],
+        },
+        {
+            'id': next(n),
+            'text': 'PCA',
+            'alias': ['dimensionality', 'reduction',],
+        },
+    ],
+    'target': [
+        {
+            'id': next(n),
+            'text': 'target-1',
+            'alias': ['tag-a',],
+        },
+        {
+            'id': next(n),
+            'text': 'target-2',
+            'alias': ['tag-b',],
+        },
+    ],
+    'understand-data': [
+        {
+            'id': next(n),
+            'text': 'Visualize Problem Space',
+            'alias': ['visualize', 'pca', 'dimensionality', 'reduction',],
+        },
+    ],
+    'machine-learning': [
+        {
+            'id': next(n),
+            'text': 'Random Forest',
+            'alias': ['random', 'forest', 'tree',],
+        },
+        {
+            'id': next(n),
+            'text': 'Gradient Descent',
+            'alias': ['sgd', 'gradient',],
+        },
+    ],
+    'validation': [
+        {
+            'id': next(n),
+            'text': 'KFold',
+            'alias': ['cross', 'validation',],
+        },
+        {
+            'id': next(n),
+            'text': 'Randomized Hyperparameter Search',
+            'alias': ['parameter', 'search', 'hyperparameter',],
+        },
+    ],
+    'understand-model': [
+        {
+            'id': next(n),
+            'text': 'Tabular Predictions',
+            'alias': ['predictions',],
+        },
+        {
+            'id': next(n),
+            'text': 'ROC Curve',
+            'alias': ['performance',],
+        },
+    ],
+}
+
+def like(str1, str2, strict=False):
+    return any([
+        str1.lower().find(str2.lower()) != -1,
+        (str2.lower().find(str1.lower()) != -1) if strict else False,
+    ])
 
 @app.route(PREFIX + "/test", methods=['GET'])
 def test():
@@ -31,16 +132,25 @@ def test():
 @app.route(PREFIX + "/autocomplete", methods=['GET'])
 def autocomplete():
     return jsonify([
-        'a',
-        'b',
-        'c',
+        element['text']
+        for elements in test_data.values()
+        for element in elements
+        if any([
+            like(element['text'], request.args.get('q')),
+            *[like(tag, request.args.get('q'))
+              for tag in element['alias']],
+        ])
     ])
 
 @app.route(PREFIX + "/suggest", methods=['GET'])
 def suggest():
     return jsonify({
-        'training-datasets': [{'id': 'a', 'text': 'a'}],
-        'label-datasets': [{'id': 'b', 'text': 'b'}, {'id': 'c', 'text': 'c'}],
+        category: [
+            element
+            for element in elements
+            if like(request.args.get('q'), element['text'], strict=True)
+        ]
+        for category, elements in test_data.items()
     })
 
 def main():
