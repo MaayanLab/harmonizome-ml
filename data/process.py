@@ -56,15 +56,24 @@ for dataset in omics_datasets + attribute_datasets:
         # save_df(df, '../'+dataset_short.replace(' ','')+'.feather')
 
 
-print('Enumerating attributes')
+print('Enumerating classes')
 all_columns = []
 for dataset in attribute_datasets:
     all_columns += ['%s (%s from %s)' % (col[0], col[1], dataset)
                     for col in map(json.loads, D[dataset].columns)]
 all_columns[:10]+all_columns[-10:]
 len(all_columns)
-json.dump(all_columns, open('attribute_list.json', 'w'))
+json.dump(all_columns, open('class_list.json', 'w'))
 
+
+print('Enumerating genes')
+all_index = []
+for dataset in attribute_datasets:
+    all_index += ['%s (%s from %s)' % (col[0], col[1], dataset)
+                    for col in map(json.loads, D[dataset].index)]
+all_index[:10]+all_index[-10:]
+len(all_index)
+json.dump(all_index, open('gene_list.json', 'w'))
 
 
 
