@@ -93,6 +93,10 @@ class ChoiceField(Field):
 
 @register
 class MultiChoiceField(Field):
+    def __init__(self, value=None, **kwargs):
+        super(MultiChoiceField, self).__init__(**kwargs)
+        self.value = self.get_value(value)
+
     def get_value(self, value):
         if type(value) == str:
             return [super(MultiChoiceField, self).get_value(value)]
