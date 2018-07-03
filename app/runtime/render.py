@@ -2,7 +2,7 @@ import os
 import re
 from flask import render_template_string
 from .convert import ipynb_import_from_file, ipynb_export_nb
-from ..model import build_safe_value
+from ..model import build_fields
 from ..util import globalContext, app_dir
 from ..template.nbtemplate_parse import render_notebook
 
@@ -18,7 +18,7 @@ def render_ipynb(context):
         **globalContext,
     )
     context.update(
-        **build_safe_value(context),
+        **build_fields(context),
     )
 
     nb = ipynb_import_from_file(os.path.join(app_dir, 'templates', 'ipynb', filename + '.ipynb'))

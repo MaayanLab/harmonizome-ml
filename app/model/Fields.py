@@ -7,71 +7,109 @@ from ..util import globalContext, data_dir
 
 fields = {}
 def register(field):
+    ''' Register a field for usage in templates
+    '''
     fields[field.__name__] = field
     return field
 
-def build_form_fields():
+def build_fields(context={}):
+    ''' Build a dictionary of Field instances
+    '''
+    global fields
     return {
-        name: lambda _field=field, **kwargs: _field(**kwargs)#.render()
-        for name, field in fields.items()
-    }
-
-def build_safe_value(context):
-    return {
-        field_name: lambda _field=field, _context=context, name=None, **kwargs: _field(**dict(kwargs, name=name, value=_context.get(name)))
+        field_name: lambda name=None, _field=field, _context=context, **kwargs: _field(
+            **dict(kwargs,
+                name=name,
+                value=_context.get(name),
+            )
+        )
         for field_name, field in fields.items()
     }
 
 class Field:
-    def __init__(self, group=None, name=None, label=None, value=None, choices=None, default=None, **kwargs):
+    def __init__(self,
+            group=None,
+            name=None,
+            label=None,
+            value=None,
+            choices=[],
+            default=None,
+            **kwargs):
         self.args = dict(
             group=group,
             name=name,
             choices=choices,
             label=label,
-            value=value,
             default=default,
+            value=value if value is not None else default,
             **kwargs,
         )
-        self.value = value if value is not None else default
-    
-    def get_field(self):
-        return self.__class__.__name__
 
-    def get_template(self):
-        return os.path.join('ipynb', 'form', self.get_field() + '.j2')
+    def constraint(self):
+        ''' Return true if args.value satisfies constraints.
+        '''
+        return self.args['value'] in self.choices
 
     def render(self):
-        return Markup(render_template(
-            self.get_template(),
-            **self.args,
-            **globalContext,
-        ))
-    
+        ''' Return a rendered version of the field (form)
+        '''
+        return Markup(
+            render_template(
+                self.template,
+                this=self,
+                **globalContext,
+            )
+        )
+
+    @property
+    def field(self):
+        ''' Field name
+        '''
+        return self.__class__.__name__
+
+    @property
+    def template(self):
+        ''' Template to use for rendering field
+        '''
+        return os.path.join('ipynb', 'form', self.field + '.j2')
+
+    @property
     def choices(self):
-        choices = self.args.get('choices', [])
+        ''' Potential values to choose from
+        '''
+        choices = self.args.get('choices')
         if type(choices) == dict:
             return choices.keys()
         else:
             return choices
 
-    def constraint(self, value):
-        return value in self.choices()
+    @property
+    def raw_value(self):
+        ''' Raw value of the field
+        '''
+        return self.args['value']
 
-    def get_value(self, value):
-        choices = self.args.get('choices', [])
+    @property
+    def value(self):
+        ''' Effective value of the field when used
+        '''
+        choices = self.args.get('choices')
         if type(choices) == dict:
-            return choices[value]
+            return choices[self.raw_value]
         else:
-            return value
+            return self.raw_value
 
-    def safe_value(self, value):
-        if self.constraint(value):
-            return Markup(self.get_value(value))
-        raise Exception('%s constraint not satisfied' % (self.args['label']))
+    @property
+    def safe_value(self):
+        ''' Effective value ready to be displayed
+        '''
+        assert self.constraint(), '%s[%s] (%s) does not satisfy constraints' % (
+            self.field, self.args.get('name', ''), self.value
+        )
+        return Markup(self.value)
 
     def __str__(self):
-        return self.safe_value(self.value)
+        return self.safe_value
 
 @register
 class StringField(Field):
@@ -82,10 +120,8 @@ class StringField(Field):
             **kwargs,
         )
 
-    def constraint(self, value):
-        if value is None:
-            raise Exception('%s cannot be empty' % (self.args['label']))
-        return re.match(self.args['constraint'], value)
+    def constraint(self):
+        return self.raw_value is not None and re.match(self.args['constraint'], self.raw_value)
 
 @register
 class ChoiceField(Field):
@@ -93,24 +129,19 @@ class ChoiceField(Field):
 
 @register
 class MultiChoiceField(Field):
-    def __init__(self, value=None, **kwargs):
-        super(MultiChoiceField, self).__init__(**kwargs)
-        self.value = self.get_value(value)
-
-    def get_value(self, value):
-        if type(value) == str:
-            return [super(MultiChoiceField, self).get_value(value)]
-        elif type(value) == list:
-            return [super(MultiChoiceField, self).get_value(v) for v in value]
-        elif value is None:
+    @property
+    def raw_value(self):
+        if type(self.args['value']) == str:
+            return [self.args['value']]
+        elif type(self.args['value']) == list:
+            return self.args['value']
+        elif self.args['value'] is None:
             return []
         else:
-            raise Exception("Invalid MultiChoiceField type")
+            return None
 
-    def constraint(self, value):
-        for v in self.get_value(value):
-            return super(MultiChoiceField, self).constraint(v)
-        return True
+    def constraint(self):
+        return self.raw_value is not None and all(v in self.choices for v in self.raw_value)
 
 @register
 class IntField(Field):
@@ -120,21 +151,25 @@ class IntField(Field):
             max=max,
             **kwargs,
         )
-    
-    def get_value(self, value):
-        if type(value) == str:
-            return int(value)
-        return value
 
+    @property
+    def raw_value(self):
+        return int(self.args['value'])
+
+    @property
     def choices(self):
         return list(range(self.args['min'], self.args['max']))
-    
-    def constraint(self, value):
-        val = self.get_value(value)
-        return val >= self.args['min'] and val <= self.args['max']
+
+    def constraint(self):
+        return self.raw_value >= self.args['min'] and self.raw_value <= self.args['max']
 
 @register
 class BoolField(Field):
+    @property
+    def raw_value(self):
+        return self.args['value'] if type(self.args['value']) == bool else bool(json.loads(self.args['value'].lower()))
+
+    @property
     def choices(self):
         return [True, False]
 
@@ -144,8 +179,9 @@ class TextField(StringField):
 
 @register
 class TextListField(TextField):
-    def get_value(self, value):
-        return value.split('\n')
+    @property
+    def raw_value(self):
+        return self.args['value'].split('\n')
 
 @register
 class SearchField(StringField):
@@ -157,17 +193,21 @@ class SearchField(StringField):
 
 @register
 class TargetClassSearchField(SearchField):
-    def get_field(self):
+    @property
+    def field(self):
         return 'SearchField'
 
+    @property
     def choices(self):
         return json.load(open(data_dir + '/class_list.json', 'r'))
 
 @register
 class TargetGeneSearchField(SearchField):
-    def get_field(self):
+    @property
+    def field(self):
         return 'SearchField'
 
+    @property
     def choices(self):
         return json.load(open(data_dir + '/gene_list.json', 'r'))
 
@@ -175,39 +215,34 @@ class TargetGeneSearchField(SearchField):
 class TargetField(Field):
     pass
 
-@register
-class SectionField(Field):
+class ContentField(Field):
     def __init__(self, content='', **kwargs):
-        super(SectionField, self).__init__(
+        super(ContentField, self).__init__(
             content=content,
             **kwargs,
         )
 
+    def render(self):
+        return self.args['content']
+
+    @property
+    def raw_value(self):
+        return self.args['content']
+    
+    def constraint(self):
+        return True
+
+@register
+class SectionField(ContentField):
     def is_section(self):
         return True
 
-    def render(self):
-        return self.args['content']
-
-    def safe_value(self, value):
-        return Markup(self.args['content'])
-
 @register
 class LaunchField(SectionField):
-    def get_field(self):
+    @property
+    def field(self):
         return 'SectionField'
 
 @register
-class DescriptionField(Field):
-    def __init__(self, content='', **kwargs):
-        super(DescriptionField, self).__init__(
-            content=content,
-            **kwargs,
-        )
-
-    def render(self):
-        return self.args['content']
-
-    def safe_value(self, value):
-        return Markup(self.args['content'])
-
+class DescriptionField(ContentField):
+    pass

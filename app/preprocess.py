@@ -4,7 +4,7 @@ import os
 import nbformat
 from flask import render_template
 from . import app
-from .model import build_form_fields
+from .model import build_fields
 from .runtime import ipynb_import_from_file
 from .template.nbtemplate_parse import parse_fields
 from .util import app_dir, globalContext
@@ -36,7 +36,7 @@ def main():
         context = dict(
           filename=file,
           **globalContext,
-          **build_form_fields(),
+          **build_fields(),
         )
 
         fields = [field

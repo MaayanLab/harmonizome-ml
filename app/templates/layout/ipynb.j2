@@ -5,11 +5,11 @@
     <div class="col-md12">
       <form class="custom-predictions-form" ipynb="#ipynb">
         <ul class="progressbar">
-          {% for section in fields|filter('get_field', 'SectionField') %}
+          {% for section in fields|selectattr('field', 'equalto', 'SectionField') %}
             <li{% if loop.index == 1 %} class="active"{% endif %}>{{ section.args.group }}</li>
           {% endfor %}
         </ul>{{ section_i }}
-        {% for section in fields|filter('get_field', 'SectionField') %}
+        {% for section in fields|selectattr('field', 'equalto', 'SectionField') %}
           <fieldset>
             <h2 class="fs-title">{{ section.args.title }}</h2>
             <h3 {% if loop.index == loop.length %}id="status" {% endif %}class="fs-subtitle">{{ section.args.subtitle }}</h3>

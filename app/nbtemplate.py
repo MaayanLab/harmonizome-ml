@@ -24,11 +24,11 @@ def init(_globals):
     Jinja environment for jinja templates
     '''
     import re
-    from .model import build_form_fields
+    from .model import build_fields
     from jinja2 import Environment, Template
     env = Environment(extensions=['jinja2.ext.do'])
     env.filters['re_match'] = lambda target, expr: re.match(expr, str(target)).groups()
-    env.globals.update(build_form_fields())
+    env.globals.update(build_fields())
 
     '''
     Basic field_matcher regex to automatically search for Field
