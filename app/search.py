@@ -11,7 +11,7 @@ def perform_search(field, query=''):
             for i, attr in enumerate([
                 attr
                 for attr in attr_list
-                if query in attr
+                if query.lower() in attr.lower()
             ])
             if i < 1000
         ])
@@ -22,7 +22,7 @@ def perform_search(field, query=''):
             for i, attr in enumerate([
                 attr
                 for attr in attr_list
-                if query in attr
+                if query.lower() in attr.lower()
             ])
             if i < 1000
         ])
