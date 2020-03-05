@@ -1,5 +1,7 @@
-__pycache__
+app/templates/*
 !app/templates/*/
+
+__pycache__
 .DS_Store
 .gradle
 .ipynb_checkpoints
@@ -8,7 +10,6 @@ __pycache__
 .settings
 *.pyc
 app/static/
-app/templates/*
 build/
 data/*/
 error.log
