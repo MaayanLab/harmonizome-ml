@@ -178,6 +178,10 @@ class TextField(StringField):
     pass
 
 @register
+class FileField(StringField):
+    pass
+
+@register
 class TextListField(TextField):
     @property
     def raw_value(self):

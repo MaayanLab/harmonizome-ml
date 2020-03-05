@@ -3,10 +3,13 @@
 import os
 from flask import request, abort, send_from_directory, render_template, jsonify
 from werkzeug.serving import WSGIRequestHandler
+from werkzeug.utils import secure_filename
 from . import app
 from .search import perform_search
 from .runtime import process_notebook
 from .util import app_dir, PREFIX, PORT, DEBUG, globalContext
+
+data_dir = 'data'
 
 @app.route(PREFIX + "/", methods=['GET', 'POST'])
 def api():
@@ -17,7 +20,12 @@ def api():
             if field and query:
                 return perform_search(field, query)
         elif request.method == 'POST':
-            return process_notebook(request.get_json())
+            data = request.form.to_dict()
+            for fname, fh in request.files.items():
+                filename = secure_filename(fh.filename)
+                fh.save(os.path.join(data_dir, filename))
+                data[fname] = filename
+            return process_notebook(data)
         return render_template('primary.html', **globalContext)
     except Exception as e:
         print('Error:', e)

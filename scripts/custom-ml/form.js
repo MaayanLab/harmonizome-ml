@@ -2,7 +2,6 @@
 // CSS Deps: form
 // form attrs: remote, filename
 
-import { toObject } from './util'
 import { setupSearchField } from './search-field'
 import { setupRemoteIpynb } from './async_ipynb'
 
@@ -63,7 +62,7 @@ function change_focus($form, $self, next) {
 }
 
 function submitForm($form) {
-    let context = toObject($form)
+    let context = new FormData($form[0])
     let ipynb = $form.attr('ipynb')
 
     setupRemoteIpynb(ipynb, context)
@@ -83,7 +82,6 @@ export function setupForm(form) {
         let $self = $(self)
         $self.click(() => change_focus($form, $self, false))
     })
-    $form.find('.submit').click(() => submitForm($form))
     $form.find('.select2').select2()
     $form.find('.spinner').each(function() {
         let $this = $(this)
@@ -106,5 +104,9 @@ export function setupForm(form) {
         let choice = $target.attr('target')
 
         type_field.val(choice)
+    })
+    $form.on('submit', function(e) {
+        e.preventDefault()
+        submitForm($form)
     })
 }

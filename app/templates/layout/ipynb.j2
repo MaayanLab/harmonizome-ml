@@ -39,7 +39,7 @@
             {% if loop.index < loop.length - 1 %}
               <input type="button" name="next" class="next action-button" value="Next" />
             {% elif loop.index < loop.length %}
-              <input type="button" name="next" class="submit next action-button" value="Next" />
+              <input type="submit" name="next" class="submit next action-button" value="Next" />
             {% elif loop.index == loop.length %}
               <input
                 id="savePredictionsButton"

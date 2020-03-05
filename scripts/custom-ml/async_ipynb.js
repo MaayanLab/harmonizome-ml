@@ -28,7 +28,7 @@ function setupRemote(remote, request, callback) {
     }
     xhttp.open('POST', remote, true);
     // xhttp.setRequestHeader("Connection", "Keep-Alive");
-    xhttp.setRequestHeader('Content-type', 'application/json');
+    // xhttp.setRequestHeader('Content-type', 'multipart/form-data');
     xhttp.send(request);
 }
 
@@ -38,15 +38,15 @@ export function setupRemoteIpynb(ipynb, params) {
     let $savePredictions = $($ipynb.attr('savePredictions'))
     let $saveNotebook = $($ipynb.attr('saveNotebook'))
     let remote = $ipynb.attr('remote')
-    let filename = $ipynb.attr('filename')
     let current_index
     let current_code_cell = 1
     let started = false
     let scroll = false
-
+    params.append('filename', $ipynb.attr('filename'))
+    
     setupRemote(
         remote,
-        JSON.stringify(Object.assign(params, {filename: filename})),
+        params,
         (update) => {
             console.log(update)
             if(update.type == 'progress') {
