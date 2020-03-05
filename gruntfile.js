@@ -77,13 +77,13 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			flask: {
-				command: 'python run.py',
+				command: 'python3 run.py',
 				options: {
 					async: true,
 				},
 			},
 			flaskApp: {
-				command: 'python run.py',
+				command: 'python3 run.py',
 				options: {
 					async: false,
 				},
@@ -95,13 +95,13 @@ module.exports = function(grunt) {
 				}
 			},
 			ipynb: {
-				command: 'python run.py preprocess',
+				command: 'python3 run.py preprocess',
 				options: {
 					async: false,
 				}
 			},
 			pydeps: {
-				command: 'pip install -r app/requirements.txt',
+				command: 'pip3 install -r app/requirements.txt',
 				options: {
 					async: false,
 				}

@@ -3,6 +3,7 @@ feather-format
 flask
 jupyter
 jupyter_client
+lxml
 matplotlib
 nbconvert
 nbformat

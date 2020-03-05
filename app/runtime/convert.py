@@ -6,7 +6,7 @@ def ipynb_export_html(nb):
     exporter = nbconvert.HTMLExporter()
     export, resources = exporter.from_notebook_node(nb)
     # Strip things from export
-    soup = BeautifulSoup(export, 'html5lib')
+    soup = BeautifulSoup(export, 'html.parser')
     soup.find('meta').decompose() # remove meta
     soup.find('title').decompose() # remove title
     soup.find('script').decompose() # remove first 2 scripts (require.js and jquery)
